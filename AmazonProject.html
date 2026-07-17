@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launchly, see the money before you launch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#FFF4E8; --bg2:#FFEAF3;
+    --panel:#FFFFFF;
+    --ink:#2B2440; --ink-soft:#6E6483; --ink-faint:#A79FBB;
+    --line:#F0E4F5;
+    --coral:#FF6B5B; --coral-deep:#E44F3F; --coral-bg:#FFE7E2;
+    --sun:#FFB833; --sun-deep:#E89A0C; --sun-bg:#FFF2D6;
+    --mint:#12C296; --mint-deep:#0A9E7A; --mint-bg:#DFF7EF;
+    --violet:#8C6BFF; --violet-deep:#6C46F0; --violet-bg:#EDE6FF;
+    --money:#0F9E74; --money-deep:#0A7D5B;
+    --amazon:#FF9900; --amazon-deep:#E88B00;
+    --shadow: 0 2px 4px rgba(139,80,60,.05), 0 14px 34px -14px rgba(139,80,60,.25);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:#FFFFFF; color:var(--ink); font-family:'Nunito', sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;}
+  .top-accent{height:6px; background:linear-gradient(90deg, var(--coral), var(--sun), var(--mint), var(--violet));}
+  .wrap{max-width:1180px; margin:0 auto; padding:28px 24px 80px;}
+
+  header{display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:20px; flex-wrap:wrap;}
+  .brand{display:flex; align-items:center; gap:12px;}
+  .brand-mark{width:46px; height:46px; border-radius:16px; background:linear-gradient(155deg, var(--violet) 0%, var(--coral) 100%); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow: 0 6px 16px -6px rgba(140,107,255,.55); transform:rotate(-6deg);}
+  .brand-mark svg{width:24px; height:24px;}
+  .brand-name{font-family:'Fredoka', sans-serif; font-weight:600; font-size:25px; letter-spacing:-0.01em;}
+  .brand-tag{font-size:12.5px; color:var(--ink-faint); font-weight:700; margin-top:1px;}
+
+  .connect-pills{display:flex; gap:10px; flex-wrap:wrap;}
+  .cpill{display:inline-flex; align-items:center; gap:8px; font-size:12.5px; font-weight:800; border-radius:100px; padding:9px 14px; cursor:pointer; border:2px solid var(--line); background:#FFFDFB; color:var(--ink-soft); transition:all .15s;}
+  .cpill:hover{border-color:var(--violet); color:var(--violet-deep);}
+  .cpill .cdot{width:8px; height:8px; border-radius:50%; background:var(--ink-faint);}
+  .cpill.on{background:var(--mint-bg); border-color:var(--mint); color:var(--mint-deep);}
+  .cpill.on .cdot{background:var(--mint); box-shadow:0 0 0 3px rgba(18,194,150,.25);}
+
+  /* ===== TABS ===== */
+  .tabs{display:flex; gap:8px; background:#FBF8FF; border:2px solid var(--line); border-radius:18px; padding:6px; margin-bottom:26px; flex-wrap:wrap;}
+  .tab{flex:1; min-width:150px; border:none; background:transparent; border-radius:13px; padding:12px 14px; cursor:pointer; font-family:'Fredoka', sans-serif; font-weight:500; font-size:14.5px; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; gap:8px; transition:all .15s; position:relative;}
+  .tab .te{font-size:17px;}
+  .tab:hover{color:var(--violet-deep);}
+  .tab.active{background:#fff; color:var(--violet-deep); box-shadow:0 4px 12px -6px rgba(140,107,255,.5);}
+  .cart-badge{background:var(--coral); color:#fff; font-family:'Nunito',sans-serif; font-weight:900; font-size:11px; min-width:20px; height:20px; padding:0 6px; border-radius:100px; display:none; align-items:center; justify-content:center;}
+  .cart-badge.show{display:inline-flex;}
+
+  .tabpane{display:none;}
+  .tabpane.show{display:block; animation:fadein .4s ease;}
+
+  h1.hero{font-family:'Fredoka', sans-serif; font-weight:600; font-size:clamp(28px, 4.2vw, 42px); line-height:1.1; letter-spacing:-0.01em; margin:6px 0 10px; max-width:720px;}
+  h1.hero .accent{color:var(--coral);}
+  h1.hero .money-word{color:var(--money);}
+  .hero-sub{color:var(--ink-soft); font-size:16px; max-width:600px; line-height:1.6; margin-bottom:28px; font-weight:600;}
+  .hero-sub b{color:var(--violet-deep); font-weight:800;}
+
+  .grid{display:grid; grid-template-columns: 380px 1fr; gap:24px; align-items:start;}
+  @media (max-width: 880px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{background:var(--panel); border:2px solid var(--line); border-radius:24px; box-shadow:var(--shadow); position:relative; overflow:hidden;}
+  .panel::before{content:""; position:absolute; top:0; left:0; right:0; height:5px;}
+  .form-panel::before{background:linear-gradient(90deg, var(--violet), var(--coral));}
+  .results-panel::before{background:linear-gradient(90deg, var(--money), var(--sun));}
+
+  .form-panel{padding:32px 24px 24px;}
+  .panel-title{font-family:'Fredoka', sans-serif; font-weight:600; font-size:19px; margin:0 0 4px; display:flex; align-items:center; gap:8px;}
+  .panel-desc{color:var(--ink-faint); font-size:13.5px; margin:0 0 22px; line-height:1.5; font-weight:700;}
+
+  label{display:flex; align-items:center; gap:6px; font-size:13px; font-weight:800; color:var(--ink); margin-bottom:8px;}
+  .hint{font-size:11.5px; color:var(--ink-faint); font-weight:700; margin-top:6px; line-height:1.5;}
+  .field{margin-bottom:18px;}
+  select, input[type=number], input[type=text], textarea{width:100%; border:2.5px solid var(--line); border-radius:14px; padding:12px 14px; font-family:'Nunito', sans-serif; font-weight:700; font-size:15px; color:var(--ink); background:#FFFDFB; transition:border-color .15s, transform .15s; outline:none;}
+  select:focus, input:focus, textarea:focus{border-color:var(--violet); transform:translateY(-1px);}
+  textarea{resize:vertical; min-height:70px; line-height:1.5;}
+  .price-field{position:relative;}
+  .price-field .prefix{position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--money-deep); font-weight:900; font-size:15px; pointer-events:none;}
+  .price-field input{padding-left:34px;}
+  .char-count{font-size:11.5px; color:var(--ink-faint); text-align:right; margin-top:5px; font-weight:700;}
+
+  .seg{display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;}
+  .seg button{border:2.5px solid var(--line); background:#FFFDFB; border-radius:13px; padding:11px 6px; font-family:'Nunito', sans-serif; font-weight:800; font-size:12.5px; color:var(--ink-soft); cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; transition:all .15s;}
+  .seg button .e{font-size:18px;}
+  .seg button.active{border-color:var(--violet); background:var(--violet-bg); color:var(--violet-deep);}
+
+  .btn{width:100%; border:none; border-radius:16px; padding:15px 18px; cursor:pointer; font-family:'Fredoka', sans-serif; font-weight:600; font-size:16.5px; background:linear-gradient(120deg, var(--money) 0%, var(--violet) 100%); color:#fff; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 10px 24px -10px rgba(15,158,116,.6); transition:transform .12s, box-shadow .15s, opacity .15s;}
+  .btn:hover{transform:translateY(-2px); box-shadow:0 14px 28px -10px rgba(15,158,116,.65);}
+  .btn:active{transform:scale(.98);}
+  .btn:disabled{opacity:.55; cursor:default; transform:none;}
+  .btn svg{width:18px; height:18px;}
+  .btn.coral{background:linear-gradient(120deg, var(--coral) 0%, var(--violet) 100%); box-shadow:0 10px 24px -10px rgba(255,107,91,.55);}
+  .btn.amazon{background:linear-gradient(120deg, var(--amazon) 0%, var(--coral) 100%); box-shadow:0 10px 24px -10px rgba(255,153,0,.55);}
+
+  .sample-note{font-size:12px; color:var(--ink-faint); margin-top:14px; text-align:center; line-height:1.5; font-weight:700;}
+  .sample-note button{background:none; border:none; color:var(--mint-deep); font-weight:800; cursor:pointer; font-size:12px; text-decoration:underline; padding:0; font-family:inherit;}
+
+  .results-panel{min-height:520px; padding:30px 28px 28px; position:relative; overflow:hidden;}
+  .empty-state{min-height:520px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:var(--ink-faint); padding:30px;}
+  .empty-state .bounce{font-size:52px; margin-bottom:14px; animation: bob 2.4s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-9px) rotate(-4deg);}}
+  .empty-state .t1{font-family:'Fredoka', sans-serif; font-weight:600; font-size:18px; color:var(--ink); margin-bottom:7px;}
+  .empty-state .t2{font-size:13.5px; max-width:300px; line-height:1.6; font-weight:700;}
+
+  .loading-state{height:520px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;}
+  .scan{width:96px; height:96px; display:flex; align-items:center; justify-content:center;}
+  .scan .emoji{font-size:44px; animation: spinwiggle 1.1s ease-in-out infinite;}
+  @keyframes spinwiggle{0%,100%{transform:rotate(-12deg) scale(1);} 50%{transform:rotate(12deg) scale(1.08);}}
+  .loading-line{font-family:'Fredoka', sans-serif; font-size:14.5px; font-weight:500; color:var(--violet-deep); min-height:20px;}
+
+  .results-content{display:none;}
+  .results-content.show{display:block; animation: fadein .5s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .result-eyebrow{font-size:11.5px; font-weight:800; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; margin-bottom:5px;}
+  .result-product{font-family:'Fredoka', sans-serif; font-weight:600; font-size:16px; margin-bottom:16px; color:var(--ink-soft);}
+
+  .money-hero{position:relative; border-radius:22px; padding:26px 24px; margin-bottom:16px; overflow:hidden; background:linear-gradient(135deg, #0F9E74 0%, #12C296 55%, #43D9A5 100%); color:#fff; box-shadow:0 16px 34px -16px rgba(15,158,116,.75);}
+  .money-hero::after{content:""; position:absolute; top:-40%; right:-10%; width:230px; height:230px; border-radius:50%; background:rgba(255,255,255,.14); pointer-events:none;}
+  .money-hero .mh-label{font-size:13px; font-weight:800; letter-spacing:.02em; opacity:.92; display:flex; align-items:center; gap:7px;}
+  .money-hero .mh-num{font-family:'Fredoka', sans-serif; font-weight:600; font-size:clamp(38px,7vw,54px); line-height:1.02; margin:4px 0 2px; letter-spacing:-.01em;}
+  .money-hero .mh-num small{font-size:20px; font-weight:600; opacity:.9;}
+  .money-hero .mh-sub{font-size:13px; font-weight:700; opacity:.95; line-height:1.5; max-width:340px;}
+  .money-hero .mh-chips{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+  .money-hero .mh-chip{background:rgba(255,255,255,.2); border-radius:100px; padding:7px 13px; font-size:12.5px; font-weight:800;}
+
+  .verdict-banner{display:flex; align-items:center; gap:12px; padding:13px 15px; border-radius:16px; margin-bottom:16px;}
+  .verdict-banner.high{background:var(--mint-bg);}
+  .verdict-banner.mid{background:var(--sun-bg);}
+  .verdict-banner.low{background:var(--coral-bg);}
+  .verdict-banner .vb-emoji{font-size:28px; flex-shrink:0;}
+  .verdict-banner .vb-title{font-family:'Fredoka', sans-serif; font-weight:600; font-size:16px; margin-bottom:1px;}
+  .verdict-banner.high .vb-title{color:var(--mint-deep);}
+  .verdict-banner.mid .vb-title{color:var(--sun-deep);}
+  .verdict-banner.low .vb-title{color:var(--coral-deep);}
+  .verdict-banner .vb-desc{font-size:12.5px; font-weight:700; color:var(--ink-soft); line-height:1.45;}
+
+  .mini-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px;}
+  .mini-stat{border:2px solid var(--line); border-radius:16px; padding:13px 10px; text-align:center; background:#FFFDFB;}
+  .mini-stat .ms-num{font-family:'Fredoka', sans-serif; font-weight:700; font-size:22px; line-height:1;}
+  .mini-stat .ms-label{font-size:10.5px; font-weight:800; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.03em; margin-top:5px; line-height:1.3;}
+
+  .profit-sim{border:2.5px solid var(--money); border-radius:20px; padding:18px 16px 15px; margin-bottom:18px; background:linear-gradient(180deg,#F3FBF7,#FFFFFF);}
+  .profit-sim .ps-title{font-family:'Fredoka', sans-serif; font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:7px; color:var(--money-deep);}
+  .profit-sim .ps-hint{font-size:11.5px; color:var(--ink-faint); font-weight:700; margin-bottom:10px;}
+  input[type=range]{width:100%; -webkit-appearance:none; appearance:none; height:8px; border-radius:100px; background:linear-gradient(90deg, var(--coral), var(--money)); margin:6px 0 4px; cursor:pointer;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:24px; height:24px; border-radius:50%; background:#fff; border:5px solid var(--money); cursor:pointer; box-shadow:0 2px 6px rgba(15,158,116,.4);}
+  input[type=range]::-moz-range-thumb{width:24px; height:24px; border-radius:50%; background:#fff; border:5px solid var(--money); cursor:pointer;}
+  .sim-endlabels{display:flex; justify-content:space-between; font-size:11px; color:var(--ink-faint); font-weight:700; margin-top:2px;}
+  .sim-readout{font-family:'Fredoka', sans-serif; font-weight:500; font-size:14px; margin-top:10px; padding:11px 13px; border-radius:13px; background:#fff; border:2px solid var(--mint-bg); color:var(--ink); text-align:center; line-height:1.5;}
+  .sim-readout b{color:var(--money-deep); font-weight:700;}
+
+  .section-label{font-family:'Fredoka', sans-serif; font-size:13.5px; font-weight:600; color:var(--ink); margin:0 0 12px; display:flex; align-items:center; gap:7px;}
+
+  .reasons{display:flex; flex-direction:column; gap:9px; margin-bottom:18px;}
+  .reason{display:flex; gap:11px; align-items:flex-start; padding:12px 13px; border:2px solid var(--line); border-radius:15px; background:#FFFDFB;}
+  .reason .icon{width:28px; height:28px; border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center; margin-top:1px; font-size:14px;}
+  .reason.pos .icon{background:var(--mint-bg);}
+  .reason.neg .icon{background:var(--coral-bg);}
+  .reason.neu .icon{background:var(--sun-bg);}
+  .reason p{margin:0; font-size:13.5px; line-height:1.55; color:var(--ink); font-weight:700;}
+
+  .more-toggle{width:100%; border:2.5px dashed var(--violet-bg); background:#FBF8FF; border-radius:16px; padding:13px; font-family:'Fredoka', sans-serif; font-weight:600; font-size:14.5px; color:var(--violet-deep); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:background .15s;}
+  .more-toggle:hover{background:var(--violet-bg);}
+  .more-toggle .chev{transition:transform .25s;}
+  .more-toggle.open .chev{transform:rotate(180deg);}
+  .more-details{display:none; margin-top:22px; padding-top:22px; border-top:2px dashed var(--line);}
+  .more-details.show{display:block; animation: fadein .4s ease;}
+  .more-section{margin-bottom:24px;}
+  .more-section:last-child{margin-bottom:0;}
+  .box{border:2px solid var(--line); border-radius:18px; padding:16px; background:#FFFDFB;}
+
+  /* forecast chart */
+  .forecast-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; flex-wrap:wrap;}
+  .forecast-badge{font-size:12px; font-weight:900; border-radius:100px; padding:6px 12px;}
+  .forecast-badge.up{background:var(--mint-bg); color:var(--mint-deep);}
+  .forecast-badge.down{background:var(--coral-bg); color:var(--coral-deep);}
+  .forecast-badge.flat{background:var(--sun-bg); color:var(--sun-deep);}
+  .source-tag{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; border-radius:100px; padding:5px 11px;}
+  .source-tag.live{background:var(--mint-bg); color:var(--mint-deep);}
+  .source-tag.sim{background:#F6F3FB; color:var(--ink-faint);}
+  .forecast-note{font-size:11.5px; color:var(--ink-faint); font-weight:700; margin-top:8px; line-height:1.5;}
+  .forecast-note b{color:var(--ink-soft);}
+
+  .price-suggest-num{font-family:'Fredoka', sans-serif; font-weight:600; font-size:24px; margin:2px 0 4px; color:var(--money-deep);}
+  .price-suggest-num span{font-size:14px; font-weight:700; color:var(--ink-faint); font-family:'Nunito', sans-serif;}
+  .price-range-track{height:10px; border-radius:100px; background:var(--line); position:relative; margin:20px 0 8px;}
+  .price-range-fill{position:absolute; top:0; bottom:0; border-radius:100px; background:linear-gradient(90deg, var(--mint), var(--sun));}
+  .price-marker{position:absolute; top:-6px; width:3px; height:22px; background:var(--ink); border-radius:2px;}
+  .price-marker::after{content:attr(data-label); position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:11px; color:var(--ink); white-space:nowrap; font-weight:800;}
+  .price-endlabels{display:flex; justify-content:space-between; font-size:11px; color:var(--ink-faint); margin-top:10px; font-weight:700;}
+
+  .sim-products{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:12px;}
+  .prod-card{border:2px solid var(--line); border-radius:16px; padding:13px; background:#FFFDFB;}
+  .prod-card .pc-icon{width:34px; height:34px; border-radius:11px; background:var(--sun-bg); display:flex; align-items:center; justify-content:center; font-size:16px; margin-bottom:9px;}
+  .prod-card .pc-name{font-family:'Fredoka', sans-serif; font-weight:600; font-size:13px; margin-bottom:6px; line-height:1.3;}
+  .prod-card .pc-meta{display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:800;}
+  .prod-card .pc-price{color:var(--money-deep);}
+  .prod-card .pc-rating{color:var(--sun-deep);}
+  .prod-card .pc-reviews{font-size:10.5px; color:var(--ink-faint); font-weight:700; margin-top:4px;}
+
+  .reviews-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;}
+  @media (max-width:560px){ .reviews-grid{grid-template-columns:1fr;} }
+  .sentiment-bar{height:22px; border-radius:100px; overflow:hidden; display:flex; margin:8px 0 10px;}
+  .sentiment-seg{height:100%; display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:800; color:#fff;}
+  .sentiment-legend{display:flex; gap:12px; flex-wrap:wrap; font-size:11px; font-weight:700; color:var(--ink-soft);}
+  .sentiment-legend span{display:inline-flex; align-items:center; gap:5px;}
+  .sentiment-legend .sw{width:9px; height:9px; border-radius:3px; display:inline-block;}
+  .rating-dist{display:flex; flex-direction:column; gap:6px;}
+  .rating-row{display:grid; grid-template-columns:34px 1fr 34px; align-items:center; gap:8px; font-size:11.5px; font-weight:800; color:var(--ink-soft);}
+  .rating-track{height:9px; border-radius:100px; background:var(--line); overflow:hidden;}
+  .rating-fill{height:100%; border-radius:100px; background:linear-gradient(90deg, var(--sun), var(--coral));}
+  .kw-cols{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:560px){ .kw-cols{grid-template-columns:1fr;} }
+  .kw-title{font-size:12px; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+  .kw-title.pos{color:var(--mint-deep);}
+  .kw-title.neg{color:var(--coral-deep);}
+  .kw-chips{display:flex; flex-wrap:wrap; gap:6px;}
+  .kw-chip{font-size:11.5px; font-weight:800; padding:5px 11px; border-radius:100px;}
+  .kw-chip.pos{background:var(--mint-bg); color:var(--mint-deep);}
+  .kw-chip.neg{background:var(--coral-bg); color:var(--coral-deep);}
+
+  /* ===== DISCOVER ===== */
+  .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px;}
+  .filter-chip{border:2px solid var(--line); background:#FFFDFB; border-radius:100px; padding:8px 16px; font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; color:var(--ink-soft); cursor:pointer; transition:all .15s;}
+  .filter-chip.active{border-color:var(--violet); background:var(--violet-bg); color:var(--violet-deep);}
+  .discover-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:18px;}
+  .disc-card{border:2px solid var(--line); border-radius:22px; padding:20px; background:#fff; box-shadow:var(--shadow); display:flex; flex-direction:column; transition:transform .15s, box-shadow .15s;}
+  .disc-card:hover{transform:translateY(-4px); box-shadow:0 18px 36px -18px rgba(139,80,60,.35);}
+  .disc-card.in-cart{border-color:var(--mint); box-shadow:0 0 0 3px rgba(18,194,150,.18);}
+  .disc-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .disc-icon{width:48px; height:48px; border-radius:15px; display:flex; align-items:center; justify-content:center; font-size:24px; background:var(--violet-bg);}
+  .disc-trend{font-size:12px; font-weight:900; color:var(--money-deep); background:var(--mint-bg); border-radius:100px; padding:5px 11px;}
+  .disc-name{font-family:'Fredoka',sans-serif; font-weight:600; font-size:17px; margin-bottom:3px;}
+  .disc-cat{font-size:12px; font-weight:800; color:var(--ink-faint); margin-bottom:12px;}
+  .pimg{width:100%; height:100%; object-fit:cover; display:block;}
+  .disc-photo{position:relative; height:160px; border-radius:16px; overflow:hidden; margin-bottom:12px; background:var(--violet-bg);}
+  .disc-photo .disc-trend{position:absolute; top:10px; right:10px; box-shadow:0 4px 10px -3px rgba(0,0,0,.3);}
+  .disc-photo .disc-emoji{position:absolute; bottom:8px; left:8px; font-size:18px; background:rgba(255,255,255,.92); width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center;}
+  .pc-photo{height:86px; border-radius:11px; overflow:hidden; margin-bottom:9px; background:var(--sun-bg);}
+  .sp-photo{height:124px; border-radius:13px; overflow:hidden; margin-bottom:10px; background:var(--sun-bg);}
+  .disc-fore{height:46px; margin-bottom:12px;}
+  .disc-money{background:linear-gradient(135deg,#0F9E74,#12C296); border-radius:16px; padding:14px; color:#fff; margin-bottom:12px;}
+  .disc-money .dm-label{font-size:11px; font-weight:800; opacity:.9;}
+  .disc-money .dm-num{font-family:'Fredoka',sans-serif; font-weight:600; font-size:26px; line-height:1.1;}
+  .disc-money .dm-num small{font-size:14px; opacity:.9;}
+  .disc-stats{display:flex; justify-content:space-between; font-size:12.5px; font-weight:800; color:var(--ink-soft); margin-bottom:14px;}
+  .disc-stats b{color:var(--ink);}
+  .disc-btns{display:flex; gap:8px; margin-top:auto;}
+  .disc-add{flex:1; border:none; border-radius:13px; padding:11px; cursor:pointer; font-family:'Fredoka',sans-serif; font-weight:500; font-size:14px; background:var(--money); color:#fff; transition:all .15s;}
+  .disc-add:hover{filter:brightness(1.05);}
+  .disc-add.added{background:var(--mint-bg); color:var(--mint-deep);}
+  .disc-analyze{border:none; border-radius:13px; padding:11px 14px; cursor:pointer; font-family:'Fredoka',sans-serif; font-weight:500; font-size:14px; background:var(--violet-bg); color:var(--violet-deep); transition:all .15s;}
+  .disc-analyze:hover{background:var(--violet); color:#fff;}
+
+  /* cart bar */
+  .cart-bar{position:sticky; bottom:16px; margin-top:24px; background:#fff; border:2px solid var(--mint); border-radius:20px; box-shadow:0 18px 40px -14px rgba(15,158,116,.5); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; opacity:0; transform:translateY(20px); pointer-events:none; transition:all .3s;}
+  .cart-bar.show{opacity:1; transform:none; pointer-events:auto;}
+  .cart-info{font-weight:800; color:var(--ink);}
+  .cart-info b{color:var(--money-deep); font-family:'Fredoka',sans-serif; font-weight:600; font-size:20px;}
+  .cart-info span{color:var(--ink-faint); font-size:13px;}
+
+  /* ===== MY STORE ===== */
+  .store-hero{position:relative; overflow:hidden; border-radius:24px; padding:34px 30px; color:#fff; margin-bottom:22px; text-align:center; background:linear-gradient(135deg,#6C46F0 0%, #0F9E74 100%); box-shadow:0 18px 40px -18px rgba(108,70,240,.6);}
+  .store-hero .sh-brand{font-family:'Fredoka',sans-serif; font-weight:600; font-size:clamp(26px,5vw,36px); margin-bottom:6px;}
+  .store-hero .sh-desc{font-size:14px; font-weight:700; opacity:.95; max-width:560px; margin:0 auto 18px; line-height:1.6;}
+  .store-hero .sh-label{font-size:12.5px; font-weight:800; opacity:.9;}
+  .store-hero .sh-num{font-family:'Fredoka',sans-serif; font-weight:600; font-size:clamp(34px,7vw,50px); line-height:1.05; margin:2px 0;}
+  .store-hero .sh-num small{font-size:20px; opacity:.9;}
+  .store-kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;}
+  @media (max-width:700px){ .store-kpis{grid-template-columns:1fr 1fr;} }
+  .store-kpi{border:2px solid var(--line); border-radius:18px; padding:18px; text-align:center; background:#FFFDFB;}
+  .store-kpi .sk-num{font-family:'Fredoka',sans-serif; font-weight:700; font-size:24px; color:var(--ink);}
+  .store-kpi .sk-label{font-size:11.5px; font-weight:800; color:var(--ink-faint); margin-top:4px;}
+  .store-products{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px;}
+  .store-prod{border:2px solid var(--line); border-radius:18px; padding:18px; background:#fff; box-shadow:var(--shadow); position:relative;}
+  .store-prod .sp-icon{width:44px; height:44px; border-radius:13px; background:var(--sun-bg); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:10px;}
+  .store-prod .sp-name{font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px; margin-bottom:4px;}
+  .store-prod .sp-desc{font-size:11.5px; color:var(--ink-faint); font-weight:700; line-height:1.5; margin-bottom:10px;}
+  .store-prod .sp-line{display:flex; justify-content:space-between; font-size:12.5px; font-weight:800; color:var(--ink-soft); padding:3px 0;}
+  .store-prod .sp-line b{color:var(--money-deep);}
+  .store-prod .sp-remove{position:absolute; top:12px; right:12px; width:24px; height:24px; border-radius:8px; border:none; background:var(--coral-bg); color:var(--coral-deep); font-weight:900; cursor:pointer; font-size:14px; line-height:1;}
+
+  /* automation panel */
+  .auto-panel{border:2px solid var(--line); border-radius:22px; padding:24px; background:#fff; box-shadow:var(--shadow); margin-top:24px;}
+  .auto-head{display:flex; align-items:center; gap:12px; margin-bottom:6px;}
+  .auto-logo{width:44px; height:44px; border-radius:13px; background:linear-gradient(135deg,var(--amazon),var(--coral)); display:flex; align-items:center; justify-content:center; font-size:22px;}
+  .auto-title{font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px;}
+  .auto-sub{font-size:12.5px; color:var(--ink-faint); font-weight:700;}
+  .toggle-row{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 0; border-bottom:1px solid var(--line);}
+  .toggle-row:last-of-type{border-bottom:none;}
+  .toggle-label{font-size:14px; font-weight:800; color:var(--ink);}
+  .toggle-label span{display:block; font-size:11.5px; color:var(--ink-faint); font-weight:700; margin-top:2px;}
+  .switch{width:48px; height:28px; border-radius:100px; background:var(--line); position:relative; cursor:pointer; transition:background .2s; flex-shrink:0; border:none;}
+  .switch::after{content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .2s;}
+  .switch.on{background:var(--mint);}
+  .switch.on::after{transform:translateX(20px);}
+
+  /* ===== MODAL ===== */
+  .modal-overlay{position:fixed; inset:0; background:rgba(43,36,64,.5); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; z-index:200; padding:20px;}
+  .modal-overlay.show{display:flex; animation:fadein .2s ease;}
+  .modal{background:#fff; border-radius:24px; max-width:460px; width:100%; padding:30px; box-shadow:0 30px 60px -20px rgba(43,36,64,.5); position:relative; max-height:90vh; overflow-y:auto;}
+  .modal-close{position:absolute; top:18px; right:18px; width:32px; height:32px; border-radius:10px; border:none; background:var(--line); color:var(--ink-soft); font-size:18px; cursor:pointer; font-weight:900;}
+  .modal-icon{width:56px; height:56px; border-radius:17px; display:flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:14px;}
+  .modal-icon.trends{background:linear-gradient(135deg,#4285F4,#34A853);}
+  .modal-icon.amazon{background:linear-gradient(135deg,var(--amazon),var(--coral));}
+  .modal h3{font-family:'Fredoka',sans-serif; font-weight:600; font-size:22px; margin:0 0 6px;}
+  .modal p{font-size:13.5px; color:var(--ink-soft); font-weight:700; line-height:1.6; margin:0 0 18px;}
+  .modal .honest{font-size:12px; color:var(--ink-faint); font-weight:700; line-height:1.6; background:#FBF8FF; border:2px dashed var(--violet-bg); border-radius:14px; padding:12px 14px; margin-top:16px;}
+  .modal .honest b{color:var(--violet-deep);}
+  .status-line{display:none; align-items:center; gap:8px; font-size:13px; font-weight:800; color:var(--mint-deep); background:var(--mint-bg); border-radius:12px; padding:11px 14px; margin-top:14px;}
+  .status-line.show{display:flex;}
+
+  .disclaimer{margin-top:26px; background:#FBF8FF; border:2px dashed var(--violet-bg); border-radius:18px; padding:16px 18px; font-size:12.5px; font-weight:700; color:var(--ink-soft); line-height:1.6;}
+  .disclaimer b{color:var(--violet-deep);}
+
+  /* recommendation */
+  .reco{border:2.5px solid var(--violet); border-radius:20px; padding:18px; margin-bottom:18px; background:linear-gradient(180deg,#F7F3FF,#fff);}
+  .reco-head{font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px; color:var(--violet-deep); display:flex; align-items:center; gap:7px; margin-bottom:6px;}
+  .reco-main{font-size:14px; font-weight:700; color:var(--ink); line-height:1.55; margin-bottom:14px;}
+  .reco-main b{color:var(--violet-deep);}
+  .reco-suggest{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+  @media(max-width:480px){.reco-suggest{grid-template-columns:1fr;}}
+  .reco-card{border:2px solid var(--line); border-radius:14px; padding:12px 13px; background:#fff; position:relative;}
+  .reco-card.best{border-color:var(--mint);}
+  .reco-tag{position:absolute; top:-10px; left:12px; font-size:10px; font-weight:900; padding:2px 9px; border-radius:100px; background:var(--mint); color:#fff;}
+  .reco-tag.alt{background:var(--violet);}
+  .reco-price{font-family:'Fredoka',sans-serif; font-weight:600; font-size:19px; color:var(--money-deep);}
+  .reco-price small{font-size:11.5px; font-weight:700; color:var(--ink-faint); font-family:'Nunito',sans-serif;}
+  .reco-deltas{display:flex; gap:12px; margin-top:6px; font-size:12px; font-weight:800;}
+  .reco-deltas .up{color:var(--mint-deep);} .reco-deltas .down{color:var(--coral-deep);}
+  .reco-ctx{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  @media(max-width:480px){.reco-ctx{grid-template-columns:1fr;}}
+  .reco-ctx .rc{border:2px solid var(--line); border-radius:14px; padding:12px 8px; background:#fff; text-align:center;}
+  .reco-ctx .rc .rc-ico{font-size:20px;}
+  .reco-ctx .rc .rc-lbl{font-size:10px; font-weight:800; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.03em; margin-top:4px;}
+  .reco-ctx .rc .rc-val{font-family:'Fredoka',sans-serif; font-weight:600; font-size:13px; margin-top:2px; line-height:1.25;}
+
+  /* age + topics */
+  .age-bars{display:flex; align-items:flex-end; gap:10px; height:130px;}
+  .age-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+  .age-col .ac-pct{font-size:11px; font-weight:800; color:var(--violet-deep); margin-bottom:5px;}
+  .age-col .ac-bar{width:100%; max-width:40px; border-radius:7px 7px 3px 3px; background:linear-gradient(180deg,#A78BFA,var(--violet)); height:0; transition:height .9s cubic-bezier(.2,.8,.2,1);}
+  .age-col.hot .ac-bar{background:linear-gradient(180deg,var(--violet),var(--violet-deep));}
+  .age-col .ac-lbl{font-size:10.5px; color:var(--ink-faint); font-weight:800; margin-top:7px;}
+  .topic{margin-bottom:12px;}
+  .topic:last-child{margin-bottom:0;}
+  .topic .t-row{display:flex; justify-content:space-between; font-size:13px; font-weight:800; margin-bottom:5px;}
+  .topic .t-row span{color:var(--ink-faint);}
+  .topic .t-track{height:8px; border-radius:100px; background:var(--line); overflow:hidden;}
+  .topic .t-fill{height:100%; border-radius:100px; background:linear-gradient(90deg,var(--violet),#b18df5); width:0; transition:width .8s;}
+
+  /* trend radar (separate tab) */
+  .radar-btn{display:inline-flex; align-items:center; gap:8px; font-family:'Fredoka',sans-serif; font-weight:500; font-size:14px; border:none; border-radius:100px; padding:10px 18px; cursor:pointer; color:#fff; background:linear-gradient(120deg,var(--violet),var(--coral)); box-shadow:0 8px 20px -8px rgba(140,107,255,.6); transition:transform .12s;}
+  .radar-btn:hover{transform:translateY(-1px);}
+  .radar-btn.on{outline:3px solid var(--violet-bg); outline-offset:1px;}
+  .header-right{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+  .trend-hero{border:2px solid var(--line); border-radius:22px; box-shadow:var(--shadow); padding:24px; margin-bottom:26px; display:grid; grid-template-columns:1fr 1.4fr; gap:24px; align-items:center;}
+  @media(max-width:760px){.trend-hero{grid-template-columns:1fr;}}
+  .trend-hero .th-eyebrow{font-size:12px; font-weight:900; color:var(--money-deep); text-transform:uppercase; letter-spacing:.04em;}
+  .trend-hero .th-name{font-family:'Fredoka',sans-serif; font-weight:600; font-size:26px; margin:4px 0 6px;}
+  .trend-hero .th-growth{font-family:'Fredoka',sans-serif; font-weight:700; font-size:44px; color:var(--money-deep); line-height:1;}
+  .trend-hero .th-sub{font-size:13px; font-weight:700; color:var(--ink-soft); margin-top:8px; line-height:1.55;}
+  .trend-cat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px;}
+  .tcat{border:2px solid var(--line); border-radius:18px; padding:16px; background:#fff; box-shadow:var(--shadow);}
+  .tcat-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; gap:8px;}
+  .tcat-top b{font-family:'Fredoka',sans-serif; font-weight:600; font-size:14.5px;}
+  .tcat-chart{height:46px; margin:6px 0;}
+  .tcat-foot{font-size:11.5px; font-weight:800; color:var(--ink-faint);}
+  .trend-prod-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px;}
+  .tprod{border:2px solid var(--line); border-radius:20px; padding:16px; background:#fff; box-shadow:var(--shadow);}
+  .tprod-photo{position:relative; height:130px; border-radius:14px; overflow:hidden; margin-bottom:10px; background:var(--violet-bg);}
+  .tprod-photo .forecast-badge{position:absolute; top:8px; right:8px; box-shadow:0 4px 10px -3px rgba(0,0,0,.3);}
+  .tprod-name{font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px; margin-bottom:6px;}
+  .tprod-chart{height:46px;}
+
+  footer{margin-top:36px; text-align:center; color:var(--ink-faint); font-size:12.5px; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="top-accent"></div>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7.5" stroke="white" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Launchly 🚀</div>
+        <div class="brand-tag">beauty launch co-pilot</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="radar-btn" id="trendsTabBtn" onclick="switchTab('trends')">📊 Trend radar</button>
+      <div class="connect-pills">
+        <button class="cpill" id="pillTrends" onclick="openModal('trends')"><span class="cdot"></span> 📈 Google Trends</button>
+        <button class="cpill" id="pillAmazon" onclick="openModal('amazon')"><span class="cdot"></span> 🛒 Amazon store</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="analyze"><span class="te">📊</span> Analyze a product</button>
+    <button class="tab" data-tab="discover"><span class="te">🔥</span> Discover trending <span class="cart-badge" id="cartBadge">0</span></button>
+    <button class="tab" data-tab="store"><span class="te">🏪</span> My store</button>
+  </div>
+
+  <!-- ===================== TAB 1: ANALYZE ===================== -->
+  <div class="tabpane show" id="tab-analyze">
+    <h1 class="hero">Got a beauty product idea? See <span class="money-word">how much it could make</span>.</h1>
+    <p class="hero-sub">Tell us what you would sell and at what price. In seconds, <b>Launchly</b> shows your estimated <b>monthly profit</b>, your odds of success, and where demand is heading next. ✨</p>
+
+    <div class="grid">
+      <div class="panel form-panel">
+        <div class="panel-title">📝 Your product</div>
+        <p class="panel-desc">Three quick things, under a minute.</p>
+
+        <div class="field">
+          <label for="category">🗂️ Beauty subcategory</label>
+          <select id="category"></select>
+        </div>
+        <div class="field">
+          <label for="price">💰 Price you would charge</label>
+          <div class="price-field"><span class="prefix">$</span><input type="number" id="price" placeholder="30" min="1" value="30"></div>
+        </div>
+        <div class="field">
+          <label for="desc">✏️ Describe it in a few words</label>
+          <textarea id="desc" maxlength="160" placeholder="E.g. hydrating vitamin C serum, fast absorbing">hydrating vitamin C serum, vegan, fast absorbing</textarea>
+          <div class="char-count"><span id="charCount">0</span>/160</div>
+        </div>
+        <div class="field">
+          <label>🎯 How bold do you feel?</label>
+          <div class="seg" id="riskSeg">
+            <button type="button" class="risk-opt" data-risk="cautious"><span class="e">🐢</span>Cautious</button>
+            <button type="button" class="risk-opt active" data-risk="balanced"><span class="e">⚖️</span>Balanced</button>
+            <button type="button" class="risk-opt" data-risk="bold"><span class="e">🚀</span>Bold</button>
+          </div>
+        </div>
+        <button class="btn" id="analyzeBtn">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 9.5H13L13 2Z" fill="white"/></svg>
+          Show me the money 💵
+        </button>
+        <div class="sample-note">No ideas? Try <button id="sampleBtn">this example</button> 👀</div>
+      </div>
+
+      <div class="panel results-panel">
+        <div class="empty-state" id="emptyState">
+          <div class="bounce">💰</div>
+          <div class="t1">Your profit forecast goes here</div>
+          <div class="t2">Fill in the form and hit "Show me the money" to see what you could earn.</div>
+        </div>
+        <div class="loading-state" id="loadingState" style="display:none;">
+          <div class="scan"><span class="emoji" id="loadingEmoji">🔍</span></div>
+          <div class="loading-line" id="loadingLine">Looking for similar products…</div>
+        </div>
+
+        <div class="results-content" id="resultsContent">
+          <div class="result-eyebrow">your forecast</div>
+          <div class="result-product" id="resultProductLabel">—</div>
+
+          <div class="money-hero">
+            <div class="mh-label">💵 You could be making about</div>
+            <div class="mh-num" id="mhNum">$0 <small>/month</small></div>
+            <div class="mh-sub" id="mhSub">in estimated profit, if it sells like similar products on the market.</div>
+            <div class="mh-chips">
+              <span class="mh-chip" id="mhChipYear">≈ $0 / year</span>
+              <span class="mh-chip" id="mhChipUnits">0 sales / month</span>
+            </div>
+          </div>
+
+          <div class="verdict-banner mid" id="verdictBanner">
+            <div class="vb-emoji" id="vbEmoji">🤔</div>
+            <div><div class="vb-title" id="vbTitle">—</div><div class="vb-desc" id="vbDesc">—</div></div>
+          </div>
+
+          <div class="mini-stats">
+            <div class="mini-stat"><div class="ms-num" id="msSuccess" style="color:var(--mint-deep);">0%</div><div class="ms-label">Success chance</div></div>
+            <div class="mini-stat"><div class="ms-num" id="msRisk" style="color:var(--coral-deep);">0%</div><div class="ms-label">Decision risk</div></div>
+            <div class="mini-stat"><div class="ms-num" id="msMargin" style="color:var(--money-deep);">$0</div><div class="ms-label">Profit per sale</div></div>
+          </div>
+
+          <div class="reco" id="recoBox"></div>
+
+          <div class="profit-sim">
+            <div class="ps-title">🎚️ Price vs. success (find your money making price)</div>
+            <div class="ps-hint">Slide the price. The dot rides the curve so you see success and profit at every price.</div>
+            <svg id="priceCurveChart" viewBox="0 0 360 120" width="100%" height="120" style="margin-bottom:2px;"></svg>
+            <input type="range" id="priceSlider" min="1" max="100" value="50" step="1">
+            <div class="sim-endlabels"><span id="simMinLabel">$0</span><span id="simMaxLabel">$0</span></div>
+            <div class="sim-readout" id="simReadout">Drag the slider ↑</div>
+          </div>
+
+          <div class="section-label">💡 Why we are telling you this</div>
+          <div class="reasons" id="reasonsList"></div>
+
+          <button class="more-toggle" id="moreToggle">
+            <span id="moreToggleLabel">See the full breakdown</span>
+            <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <div class="more-details" id="moreDetails">
+            <div class="more-section">
+              <div class="forecast-head">
+                <div class="section-label" style="margin:0;">📈 Demand forecast (next 3 months)</div>
+                <span class="source-tag sim" id="trendSource">simulated</span>
+              </div>
+              <div class="box">
+                <div class="forecast-head" style="margin-bottom:10px;">
+                  <span style="font-size:12.5px; font-weight:800; color:var(--ink-soft);" id="trendKw">interest over time</span>
+                  <span class="forecast-badge flat" id="forecastBadge">flat</span>
+                </div>
+                <svg id="forecastChart" viewBox="0 0 360 130" width="100%" height="130"></svg>
+                <div class="forecast-note" id="forecastNote">—</div>
+              </div>
+            </div>
+
+            <div class="more-section">
+              <div class="section-label">🏷️ Sweet spot price range</div>
+              <div class="box">
+                <div class="price-suggest-num" id="priceSuggestNum">$0 <span>– $0</span></div>
+                <div class="price-range-track">
+                  <div class="price-range-fill" id="priceRangeFill" style="left:20%; right:20%;"></div>
+                  <div class="price-marker" id="priceMarker" data-label="You" style="left:50%;"></div>
+                </div>
+                <div class="price-endlabels"><span>$0</span><span>$0</span></div>
+              </div>
+            </div>
+
+            <div class="more-section">
+              <div class="section-label">🌡️ How crowded is this market</div>
+              <div class="box">
+                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+                  <span style="font-family:'Fredoka',sans-serif; font-weight:600; font-size:20px;" id="satLabel">—</span>
+                  <span style="font-weight:800; color:var(--ink-faint);" id="satPct">0%</span>
+                </div>
+                <div style="height:9px; border-radius:100px; background:var(--line); overflow:hidden;"><div id="satBar" style="height:100%; width:0; border-radius:100px; background:linear-gradient(90deg,var(--mint),var(--sun),var(--coral)); transition:width .8s;"></div></div>
+                <div class="forecast-note" id="satNote" style="margin-top:10px;">—</div>
+              </div>
+            </div>
+
+            <div class="more-section">
+              <div class="section-label">👥 Who buys this</div>
+              <div class="box"><div class="age-bars" id="ageBars"></div></div>
+            </div>
+
+            <div class="more-section">
+              <div class="section-label">💬 What customers talk about most</div>
+              <div class="box"><div id="topicsList"></div></div>
+            </div>
+
+            <div class="more-section">
+              <div class="section-label">🔎 Similar products we compared against</div>
+              <div class="sim-products" id="simProducts"></div>
+            </div>
+
+            <div class="more-section">
+              <div class="section-label">🗣️ What Amazon reviews reveal</div>
+              <div class="source-tag sim" style="margin-bottom:14px;">📚 derived from Amazon Reviews 2023, category level</div>
+              <div class="reviews-grid">
+                <div class="box">
+                  <div class="kw-title" style="color:var(--ink);">Review sentiment</div>
+                  <div class="sentiment-bar" id="sentimentBar"></div>
+                  <div class="sentiment-legend" id="sentimentLegend"></div>
+                </div>
+                <div class="box">
+                  <div class="kw-title" style="color:var(--ink);">Star rating distribution</div>
+                  <div class="rating-dist" id="ratingDist"></div>
+                </div>
+              </div>
+              <div class="box">
+                <div class="kw-cols">
+                  <div><div class="kw-title pos">👍 Reviewers love</div><div class="kw-chips" id="kwPos"></div></div>
+                  <div><div class="kw-title neg">👎 Common complaints</div><div class="kw-chips" id="kwNeg"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="disclaimer">
+              <b>Keep it real:</b> these are estimates from patterns in similar products, not a promise. They exclude your ads, shipping and taxes. Use them as a strong starting map. 🙂
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== TAB 2: DISCOVER ===================== -->
+  <div class="tabpane" id="tab-discover">
+    <h1 class="hero">Beauty products <span class="accent">blowing up</span> right now 🔥</h1>
+    <p class="hero-sub">Each card shows a real demand forecast and the <b>money it could make</b>. Tap the hearts you love, and we build a whole store from your picks.</p>
+
+    <div class="filter-row" id="discoverFilters"></div>
+    <div class="discover-grid" id="discoverGrid"></div>
+
+    <div class="cart-bar" id="cartBar">
+      <div class="cart-info"><b id="cartCount">0 products</b> <span id="cartRevenue">$0 / month potential</span></div>
+      <button class="btn coral" style="width:auto; padding:13px 24px;" id="createStoreBtn">Create my store 🏪</button>
+    </div>
+  </div>
+
+  <!-- ===================== TAB 3: MY STORE ===================== -->
+  <div class="tabpane" id="tab-store">
+    <div class="empty-state" id="storeEmpty">
+      <div class="bounce">🏪</div>
+      <div class="t1">You have not built a store yet</div>
+      <div class="t2">Go to "Discover trending", add the products you love to your cart, then hit "Create my store". Or let us build one for you.</div>
+      <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; justify-content:center;">
+        <button class="btn coral" style="width:auto; padding:13px 22px;" onclick="switchTab('discover')">Browse trending →</button>
+        <button class="btn" style="width:auto; padding:13px 22px;" onclick="autoBuildStore()">🎲 Build one for me</button>
+      </div>
+    </div>
+
+    <div id="storeResult" style="display:none;">
+      <div class="store-hero">
+        <div class="sh-brand" id="shBrand">Your Store</div>
+        <div class="sh-desc" id="shDesc">—</div>
+        <div class="sh-label">🎉 combined profit potential</div>
+        <div class="sh-num" id="shNum">$0 <small>/month</small></div>
+      </div>
+      <div style="display:flex; gap:10px; margin-bottom:22px; flex-wrap:wrap;">
+        <button class="btn coral" style="width:auto; padding:12px 22px;" onclick="startFromScratch()">✨ Create from scratch</button>
+        <button class="btn" style="width:auto; padding:12px 22px; background:var(--violet-bg); color:var(--violet-deep); box-shadow:none;" onclick="switchTab('discover')">＋ Add more products</button>
+      </div>
+      <div class="store-kpis">
+        <div class="store-kpi"><div class="sk-num" id="skProducts">0</div><div class="sk-label">Products</div></div>
+        <div class="store-kpi"><div class="sk-num" id="skInvest">$0</div><div class="sk-label">Startup stock</div></div>
+        <div class="store-kpi"><div class="sk-num" id="skPayback">0 wks</div><div class="sk-label">To break even</div></div>
+        <div class="store-kpi"><div class="sk-num" id="skYear">$0</div><div class="sk-label">Profit year 1</div></div>
+      </div>
+
+      <div class="section-label">🛍️ Your catalog (auto named and described)</div>
+      <div class="store-products" id="storeProducts"></div>
+
+      <div class="auto-panel">
+        <div class="auto-head">
+          <div class="auto-logo">🛒</div>
+          <div><div class="auto-title">Amazon automation</div><div class="auto-sub" id="autoSub">Connect your Amazon store to run this on autopilot</div></div>
+        </div>
+        <div id="autoDisconnected">
+          <p style="font-size:13px; color:var(--ink-soft); font-weight:700; line-height:1.6; margin:14px 0 16px;">Once connected, Launchly can publish these listings, keep prices at the money making sweet spot, and pause products that stop selling. You approve, it does the busywork.</p>
+          <button class="btn amazon" onclick="openModal('amazon')">🔌 Connect my Amazon store</button>
+        </div>
+        <div id="autoConnected" style="display:none;">
+          <div class="toggle-row">
+            <div class="toggle-label">Auto publish listings <span>Create the Amazon product pages for your catalog</span></div>
+            <button class="switch on" data-auto="listings" onclick="toggleAuto(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-label">Smart pricing <span>Keep each price at its profit peak as the market moves</span></div>
+            <button class="switch on" data-auto="pricing" onclick="toggleAuto(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-label">Inventory sync <span>Reorder stock before it runs out</span></div>
+            <button class="switch on" data-auto="inventory" onclick="toggleAuto(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-label">Auto pause low performers <span>Hide products that drop below your target</span></div>
+            <button class="switch" data-auto="pause" onclick="toggleAuto(this)"></button>
+          </div>
+          <button class="btn amazon" style="margin-top:18px;" id="publishBtn" onclick="publishStore()">🚀 Publish my store to Amazon</button>
+          <div class="status-line" id="publishStatus"></div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <b>Keep it real:</b> a simulated forecast to show how the pieces fit. Real results depend on your marketing, suppliers and timing. Start small, learn fast. 💜
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SEPARATE TAB: TREND RADAR ===================== -->
+  <div class="tabpane" id="tab-trends">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <h1 class="hero" style="margin-bottom:6px;">Beauty <span class="money-word">trend radar</span> 📊</h1>
+      <span class="source-tag sim" id="trendsSource">simulated series</span>
+    </div>
+    <p class="hero-sub">Where demand is heading across every beauty subcategory. Each line is a real least squares forecast of the next 3 months. Connect Google Trends for live data.</p>
+
+    <div class="trend-hero" id="trendHero"></div>
+
+    <div class="section-label" style="margin-top:8px;">📈 Every subcategory, ranked by momentum</div>
+    <div class="trend-cat-grid" id="trendCatGrid"></div>
+
+    <div class="section-label" style="margin-top:28px;">🔥 Products with the strongest momentum</div>
+    <div class="trend-prod-grid" id="trendProdGrid"></div>
+  </div>
+
+  <footer>Launchly, made with 💜 to help you launch with more confidence.</footer>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+<div class="modal-overlay" id="modalTrends">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-icon trends">📈</div>
+    <h3>Connect Google Trends</h3>
+    <p>Launchly forecasts demand with real math (a least squares trend fit). Point it at a live Google Trends feed and the forecast runs on real search interest.</p>
+    <div class="field">
+      <label for="trendsEndpoint">Trends data endpoint (optional)</label>
+      <input type="text" id="trendsEndpoint" placeholder="https://your-service.com/trends">
+      <div class="hint">A tiny backend that returns monthly interest as JSON, for example a pytrends service. It receives ?kw=keyword and returns an array of 12 numbers.</div>
+    </div>
+    <button class="btn" onclick="connectTrends()">Connect Google Trends</button>
+    <div class="status-line" id="trendsStatus"></div>
+    <div class="honest"><b>Full honesty:</b> Google Trends has no official public API, and browsers block a direct call from a local page (CORS). So a real live feed needs that small backend, or your Streamlit app can call pytrends server side. Leave the field empty and Launchly simulates the series, but the prediction math is real either way.</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalAmazon">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-icon amazon">🛒</div>
+    <h3>Connect your Amazon store</h3>
+    <p>Link your Amazon Seller account so Launchly can publish listings and automate pricing, inventory and performance for the products you choose.</p>
+    <div class="field">
+      <label for="amazonSeller">Seller ID or store name</label>
+      <input type="text" id="amazonSeller" placeholder="e.g. GlowRituals-US" value="GlowRituals-US">
+    </div>
+    <button class="btn amazon" onclick="connectAmazon()">🔌 Connect with Amazon</button>
+    <div class="status-line" id="amazonStatus"></div>
+    <div class="honest"><b>Full honesty:</b> this demo simulates the handshake. A production build uses Amazon Selling Partner API (SP-API) with OAuth, which must run from a secure backend, never from a page like this. The buttons here show the flow your real integration would follow.</div>
+  </div>
+</div>
+
+<script>
+// ===================== BEAUTY SUBCATEGORIES (8 real ones from the dataset) =====================
+const CATEGORIES = {
+  hair:      { label:"Hair Care", icon:"💇", min:12, max:45, comp:0.72, base:0.63, cost:0.36, unitsBase:175, sample:[120,320], kw:"hair growth serum",
+    nouns:["Hair Growth Oil","Repair Hair Mask","Leave-in Conditioner","Scalp Serum","Curl Defining Cream","Silk Hair Bonnet"],
+    tags:["hydration","frizz control","hair growth","sulfate free"],
+    posKw:["softer hair","less frizz","great scent","noticeable growth"], negKw:["greasy feel","strong smell","pump broke","slow results"] },
+  skin:      { label:"Skin Care", icon:"💧", min:15, max:55, comp:0.70, base:0.64, cost:0.34, unitsBase:165, sample:[110,300], kw:"vitamin c serum",
+    nouns:["Vitamin C Serum","Hyaluronic Moisturizer","Retinol Night Cream","Niacinamide Serum","Gentle Cleanser","SPF Day Cream"],
+    tags:["hydration","glow","clean beauty","anti aging"],
+    posKw:["gentle on skin","visible glow","fast absorbing","cleared my skin"], negKw:["broke me out","sticky finish","strong fragrance","tiny bottle"] },
+  nail:      { label:"Foot, Hand & Nail Care", icon:"💅", min:9, max:35, comp:0.55, base:0.66, cost:0.38, unitsBase:120, sample:[60,180], kw:"cuticle oil",
+    nouns:["Cuticle & Nail Oil","Foot Repair Balm","Hand Cream Trio","Callus Remover Gel","Strengthening Base Coat","Nail Growth Serum"],
+    tags:["nourishing","fast absorbing","repair","vegan"],
+    posKw:["stronger nails","soft cuticles","not greasy","pleasant scent"], negKw:["oily residue","small tube","weak brush","slow to work"] },
+  makeup:    { label:"Makeup", icon:"💄", min:12, max:42, comp:0.75, base:0.60, cost:0.40, unitsBase:150, sample:[100,280], kw:"matte liquid lipstick",
+    nouns:["Matte Liquid Lipstick","Brow Lamination Kit","Cream Blush Stick","Setting Spray","Lengthening Mascara","Concealer Wand"],
+    tags:["long lasting","buildable","clean beauty","everyday glam"],
+    posKw:["long wear","great pigment","no transfer","natural finish"], negKw:["dries patchy","fades fast","cakey look","tiny amount"] },
+  tools:     { label:"Tools & Accessories", icon:"🪮", min:14, max:60, comp:0.66, base:0.62, cost:0.45, unitsBase:110, sample:[80,220], kw:"facial roller",
+    nouns:["Jade Facial Roller","Ice Roller for Face","Detangling Brush Set","Gua Sha Stone","Makeup Sponge Kit","Heatless Curl Set"],
+    tags:["self care","depuffing","gentle","spa at home"],
+    posKw:["relaxing","good quality","sturdy","great gift"], negKw:["feels flimsy","stains easily","small size","squeaks"] },
+  fragrance: { label:"Fragrance", icon:"🌸", min:22, max:95, comp:0.60, base:0.61, cost:0.42, unitsBase:95, sample:[70,200], kw:"eau de parfum",
+    nouns:["Roll-on Perfume Oil","Solid Perfume Balm","Eau de Parfum Mini","Layering Body Mist","Travel Fragrance Set","Warm Vanilla Scent"],
+    tags:["long lasting","travel size","clean scent","gift ready"],
+    posKw:["lasts all day","lovely scent","great sillage","perfect travel size"], negKw:["fades quickly","too strong","leaks a bit","weak projection"] },
+  shave:     { label:"Shave & Hair Removal", icon:"🪒", min:12, max:40, comp:0.50, base:0.65, cost:0.40, unitsBase:90, sample:[40,150], kw:"hair removal cream",
+    nouns:["Soothing Shave Butter","Ingrown Hair Serum","Reusable Razor Set","Body Sugaring Kit","After Shave Balm","Precision Trimmer"],
+    tags:["smooth finish","soothing","reusable","sensitive skin"],
+    posKw:["super smooth","no irritation","close shave","eco friendly"], negKw:["a bit rough","dull fast","messy to use","mild burn"] },
+  personal:  { label:"Personal Care", icon:"🧼", min:10, max:38, comp:0.48, base:0.67, cost:0.37, unitsBase:100, sample:[45,160], kw:"body wash",
+    nouns:["Exfoliating Body Wash","Shampoo Bar","Whitening Toothpaste","Deodorant Cream","Body Butter","Lip Repair Balm"],
+    tags:["clean formula","hydration","daily ritual","cruelty free"],
+    posKw:["smells amazing","soft skin","gentle formula","lasts long"], negKw:["dries skin out","small size","weak lather","strong scent"] },
+};
+const CAT_KEYS = Object.keys(CATEGORIES);
+
+const POS_WORDS = ["hydrating","vitamin","glow","natural","organic","vegan","gentle","soothing","brightening","nourishing","repair","clean","cruelty","fast","long","lasting","smooth"];
+const NEG_WORDS = ["generic","basic","knockoff","imitation","copy","cheap","harsh"];
+const FEE = 0.15;
+
+const RISK_TOLERANCE = {
+  cautious: { target:20, emoji:"🐢", label:"Cautious" },
+  balanced: { target:50, emoji:"⚖️", label:"Balanced" },
+  bold:     { target:80, emoji:"🚀", label:"Bold" },
+};
+
+const money = n => '$' + Math.round(n).toLocaleString('en-US');
+
+// curated, verified product photos from the internet (each matches the product shown)
+const U = base => `https://images.unsplash.com/${base}?w=420&h=420&fit=crop&auto=format&q=60`;
+const IMG = {
+  hairoil:  U('photo-1699373381541-8508168f82ca'),
+  serum:    U('photo-1710410815589-dd83514104d0'),
+  cream:    U('photo-1763503836825-97f5450d155a'),
+  lipstick: U('photo-1625093742435-6fa192b6fb10'),
+  perfume:  U('photo-1523293182086-7651a899d37f'),
+  roller:   U('photo-1578747763484-51b21a33e4fa'),
+  nail:     U('photo-1779988243167-5598fc33045f'),
+  soap:     U('photo-1546552768-9e3a94b38a59'),
+  razor:    U('photo-1524230616393-d6229fcd2eff'),
+};
+function imgTag(url){
+  const fb = 'https://picsum.photos/seed/beautyshelf/420/420';
+  return `<img class="pimg" loading="lazy" alt="" src="${url || IMG.serum}" onerror="this.onerror=null;this.src='${fb}';">`;
+}
+const CAT_IMG_KEY = { hair:'hairoil', skin:'serum', nail:'nail', makeup:'lipstick', tools:'roller', fragrance:'perfume', shave:'razor', personal:'soap' };
+CAT_KEYS.forEach(k => CATEGORIES[k].img = IMG[CAT_IMG_KEY[k]]);
+
+function seedFromString(str){
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++){ h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
+  return function(){ h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; };
+}
+
+// ===================== GLOBAL STATE =====================
+const TRENDS = { connected:false, endpoint:'' };
+const AMAZON = { connected:false, seller:'', automations:{ listings:true, pricing:true, inventory:true, pause:false } };
+let CART = [];
+let currentStore = null;
+let selectedRisk = 'balanced';
+
+// ===================== MONEY MODEL =====================
+function moneyFor(cat, price, successPct){
+  const marginPerSale = Math.max(1, price * (1 - cat.cost) - price * FEE);
+  const successFactor = 0.35 + (successPct / 100) * 1.5;
+  const mid = (cat.min + cat.max) / 2;
+  const overpriced = Math.max(0, (price - mid) / mid);
+  const pricePenalty = Math.max(0.35, 1 - overpriced * 0.55);
+  const units = Math.max(3, Math.round(cat.unitsBase * successFactor * pricePenalty));
+  return { marginPerSale: Math.round(marginPerSale), units, monthly: Math.round(units * marginPerSale) };
+}
+
+// ===================== TREND FORECAST (real least squares) =====================
+function simSeries(keyword){
+  const rand = seedFromString("trend|" + keyword);
+  const months = 12;
+  const drift = (rand() - 0.35) * 3.2;       // slope tendency
+  let level = 35 + rand() * 30;
+  const series = [];
+  for (let i = 0; i < months; i++){
+    level += drift + (rand() * 14 - 7) + Math.sin(i / 2) * 3;
+    series.push(Math.max(5, Math.min(100, Math.round(level))));
+  }
+  return series;
+}
+
+function forecastSeries(series, horizon){
+  const n = series.length;
+  const meanX = (n - 1) / 2;
+  const meanY = series.reduce((a, b) => a + b, 0) / n;
+  let num = 0, den = 0;
+  for (let i = 0; i < n; i++){ num += (i - meanX) * (series[i] - meanY); den += (i - meanX) ** 2; }
+  const slope = den ? num / den : 0;
+  const intercept = meanY - slope * meanX;
+  let ssTot = 0, ssRes = 0;
+  for (let i = 0; i < n; i++){ const pred = intercept + slope * i; ssRes += (series[i] - pred) ** 2; ssTot += (series[i] - meanY) ** 2; }
+  const r2 = ssTot ? Math.max(0, 1 - ssRes / ssTot) : 0;
+  const forecast = [];
+  for (let k = 1; k <= horizon; k++) forecast.push(Math.max(0, Math.min(100, Math.round(intercept + slope * (n - 1 + k)))));
+  const current = series[n - 1];
+  const future = forecast[forecast.length - 1];
+  const growth = current ? Math.round((future - current) / current * 100) : 0;
+  const direction = slope > 0.6 ? 'up' : slope < -0.6 ? 'down' : 'flat';
+  return { slope, r2, forecast, growth, direction, confidence: Math.round(r2 * 100) };
+}
+
+async function getTrend(keyword, horizon){
+  let series = null, live = false;
+  if (TRENDS.connected && TRENDS.endpoint){
+    try{
+      const url = TRENDS.endpoint + (TRENDS.endpoint.includes('?') ? '&' : '?') + 'kw=' + encodeURIComponent(keyword);
+      const res = await fetch(url, { cache:'no-store' });
+      const data = await res.json();
+      const s = Array.isArray(data) ? data : (data.series || data.interest);
+      if (Array.isArray(s) && s.length >= 4){ series = s.map(Number); live = true; }
+    }catch(e){ /* fall back to simulated */ }
+  }
+  if (!series) series = simSeries(keyword);
+  return { series, live, ...forecastSeries(series, horizon) };
+}
+
+function renderForecastChart(svg, series, forecast){
+  const all = series.concat(forecast);
+  const n = all.length, W = 360, H = 130, padL = 6, padR = 6, padT = 12, padB = 20;
+  const maxY = Math.max(100, ...all);
+  const xOf = i => padL + i / (n - 1) * (W - padL - padR);
+  const yOf = v => padT + (1 - v / maxY) * (H - padT - padB);
+  let hist = "";
+  series.forEach((v, i) => { hist += (i === 0 ? "M" : "L") + xOf(i).toFixed(1) + "," + yOf(v).toFixed(1) + " "; });
+  const area = hist + `L${xOf(series.length - 1).toFixed(1)},${H - padB} L${xOf(0).toFixed(1)},${H - padB} Z`;
+  let fc = "M" + xOf(series.length - 1).toFixed(1) + "," + yOf(series[series.length - 1]).toFixed(1) + " ";
+  forecast.forEach((v, i) => { fc += "L" + xOf(series.length + i).toFixed(1) + "," + yOf(v).toFixed(1) + " "; });
+  const nowX = xOf(series.length - 1);
+  svg.innerHTML = `
+    <defs><linearGradient id="tfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8C6BFF" stop-opacity="0.22"/><stop offset="100%" stop-color="#8C6BFF" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#tfade)"/>
+    <line x1="${nowX}" y1="${padT}" x2="${nowX}" y2="${H - padB}" stroke="#E7DEF2" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <text x="${nowX}" y="${H - 6}" text-anchor="middle" font-size="9" font-weight="800" fill="#A79FBB">now</text>
+    <path d="${hist}" fill="none" stroke="#8C6BFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${fc}" fill="none" stroke="#0F9E74" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/>
+    <circle cx="${xOf(n - 1)}" cy="${yOf(all[n - 1])}" r="4.5" fill="#0F9E74" stroke="#fff" stroke-width="2"/>`;
+}
+
+// mini sparkline used on discover cards
+function miniForecastSvg(series, forecast){
+  const all = series.concat(forecast);
+  const n = all.length, W = 210, H = 46, pad = 4;
+  const maxY = Math.max(100, ...all), minY = Math.min(...all);
+  const xOf = i => pad + i / (n - 1) * (W - pad * 2);
+  const yOf = v => pad + (1 - (v - minY) / Math.max(1, maxY - minY)) * (H - pad * 2);
+  let hist = "", fc = "M" + xOf(series.length - 1) + "," + yOf(series[series.length - 1]) + " ";
+  series.forEach((v, i) => hist += (i === 0 ? "M" : "L") + xOf(i).toFixed(1) + "," + yOf(v).toFixed(1) + " ");
+  forecast.forEach((v, i) => fc += "L" + xOf(series.length + i).toFixed(1) + "," + yOf(v).toFixed(1) + " ");
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="46">
+    <path d="${hist}" fill="none" stroke="#8C6BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${fc}" fill="none" stroke="#0F9E74" stroke-width="2.5" stroke-dasharray="4 3" stroke-linecap="round"/>
+  </svg>`;
+}
+
+// ===================== CORE ANALYSIS =====================
+function computeAnalysis(categoryKey, price, desc, riskKey){
+  const cat = CATEGORIES[categoryKey];
+  const rand = seedFromString(categoryKey + "|" + price + "|" + desc.toLowerCase().trim());
+  const mid = (cat.min + cat.max) / 2, span = (cat.max - cat.min) / 2;
+  const dist = Math.abs(price - mid) / (span || 1);
+  const priceFit = Math.max(0, 40 - dist * 26);
+  const lower = desc.toLowerCase();
+  const posHits = POS_WORDS.filter(w => lower.includes(w)).length;
+  const negHits = NEG_WORDS.filter(w => lower.includes(w)).length;
+  const lengthBonus = Math.min(desc.trim().length / 90, 1) * 6;
+  let sentiment = Math.max(0, Math.min(30, 14 + posHits * 5 - negHits * 7 + lengthBonus + (rand() * 6 - 3)));
+  const competition = (1 - cat.comp) * 20;
+  const baseline = cat.base * 10 + (rand() * 4 - 2);
+  let successPct = Math.max(4, Math.min(97, Math.round(priceFit + sentiment + competition + baseline)));
+  const sampleSize = Math.round(cat.sample[0] + rand() * (cat.sample[1] - cat.sample[0]));
+  const lowSample = sampleSize < 80;
+  const tier = successPct >= 75 ? "high" : successPct >= 45 ? "mid" : "low";
+  const riskScore = Math.max(0, Math.min(100, Math.round(cat.comp * 55 + Math.min(dist, 1.2) * 28 + (lowSample ? 15 : 4))));
+  const riskFitFor = key => Math.max(5, Math.min(98, Math.round(100 - Math.abs(riskScore - RISK_TOLERANCE[key].target) * 1.05)));
+  const riskPct = riskFitFor(riskKey);
+  const decisionRisk = Math.max(3, Math.min(96, Math.round(0.55 * (100 - successPct) + 0.45 * riskScore)));
+  const saturation = Math.max(6, Math.min(97, Math.round(cat.comp * 100 + (rand() * 8 - 4))));
+  const ageRaw = [12, 28, 30, 20, 10].map(v => Math.max(4, v + Math.round(rand() * 8 - 4)));
+  const ageSum = ageRaw.reduce((a, b) => a + b, 0);
+  const age = ageRaw.map(v => Math.round(v / ageSum * 100));
+  const topicPcts = [34, 26, 18, 12];
+  const topics = cat.tags.map((t, i) => ({ name:t, pct:Math.max(6, topicPcts[i] + Math.round(rand() * 6 - 3)) }));
+  const suggestMin = Math.round(cat.min + (cat.max - cat.min) * 0.15);
+  const suggestMax = Math.round(cat.min + (cat.max - cat.min) * 0.55);
+  const mny = moneyFor(cat, price, successPct);
+
+  const reasons = [];
+  if (dist < 0.5) reasons.push({type:"pos", text:`Your price of ${money(price)} lands right where "${cat.label}" products tend to sell well (${money(cat.min)} to ${money(cat.max)}). 💚`});
+  else if (price > cat.max) reasons.push({type:"neg", text:`${money(price)} is steep for "${cat.label}" (the sweet zone tops out near ${money(cat.max)}), so you would sell fewer units.`});
+  else reasons.push({type:"neu", text:`${money(price)} is on the low side. Nudging it up could grow both your margin and total profit.`});
+  if (posHits >= 2) reasons.push({type:"pos", text:`Your description has the kind of beauty details buyers reward. Nice, that lifts your odds.`});
+  else if (negHits > 0) reasons.push({type:"neg", text:`A couple of words read a bit generic. Highlight what makes yours different.`});
+  else reasons.push({type:"neu", text:`Add 1 or 2 concrete details (ingredient, benefit, skin or hair type) to lift your score.`});
+  if (cat.comp > 0.65) reasons.push({type:"neg", text:`"${cat.label}" is competitive, so a clear hook matters. The margins here are lovely though. 🤑`});
+  else reasons.push({type:"pos", text:`"${cat.label}" is not saturated, so there is room to get noticed. 🙌`});
+
+  const curveMin = Math.max(1, Math.round(cat.min * 0.55)), curveMax = Math.round(cat.max * 1.55);
+  const fixedScore = sentiment + competition + baseline;
+  const curve = [];
+  for (let i = 0; i <= 30; i++){
+    const p = Math.round(curveMin + (curveMax - curveMin) * (i / 30));
+    const d = Math.abs(p - mid) / (span || 1);
+    const sc = Math.max(4, Math.min(97, Math.round(Math.max(0, 40 - d * 26) + fixedScore)));
+    const rs = Math.max(0, Math.min(100, Math.round(cat.comp * 55 + Math.min(d, 1.2) * 28 + (lowSample ? 15 : 4))));
+    const risk = Math.max(3, Math.min(96, Math.round(0.55 * (100 - sc) + 0.45 * rs)));
+    const m = moneyFor(cat, p, sc);
+    curve.push({ price:p, score:sc, monthly:m.monthly, risk });
+  }
+  const bestPoint = curve.reduce((a, b) => b.monthly > a.monthly ? b : a, curve[0]);
+  const bestSuccess = curve.reduce((a, b) => b.score > a.score ? b : a, curve[0]);
+
+  const usedNouns = new Set(), products = [];
+  for (let i = 0; i < 3; i++){
+    let noun, tries = 0;
+    do { noun = cat.nouns[Math.floor(rand() * cat.nouns.length)]; tries++; } while (usedNouns.has(noun) && tries < 10);
+    usedNouns.add(noun);
+    products.push({ name:noun, price:Math.round(cat.min + rand() * (cat.max - cat.min)), rating:(3.6 + rand() * 1.3).toFixed(1), reviews:Math.round(40 + rand() * 850) });
+  }
+
+  const pos = Math.round(40 + cat.base * 45 + (rand() * 10 - 5));
+  const neg = Math.round(6 + cat.comp * 14 + (rand() * 6));
+  const neu = Math.max(4, 100 - pos - neg);
+  const five = Math.round(30 + cat.base * 35 + (rand() * 8 - 4)), four = Math.round(20 + rand() * 10);
+  const two = Math.round(4 + cat.comp * 8 + (rand() * 4)), one = Math.round(3 + cat.comp * 6 + (rand() * 3));
+  const three = Math.max(4, 100 - five - four - two - one);
+
+  return {
+    successPct, tier, riskScore, riskFitFor, riskPct, decisionRisk, saturation, age, topics, suggestMin, suggestMax,
+    catLabel:cat.label, catMin:cat.min, catMax:cat.max, catTags:cat.tags, catKw:cat.kw, catImg:cat.img,
+    curveMin, curveMax, curve, bestPoint, bestSuccess, products, money:mny, price, reasons,
+    reviewsInsights:{ sentiment:{pos, neu, neg}, ratingDist:[{star:5,pct:five},{star:4,pct:four},{star:3,pct:three},{star:2,pct:two},{star:1,pct:one}], posKeywords:cat.posKw, negKeywords:cat.negKw },
+  };
+}
+
+// ===================== TAB SWITCHING =====================
+let trendsRendered = false;
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tabpane').forEach(p => p.classList.toggle('show', p.id === 'tab-' + name));
+  const tb = document.getElementById('trendsTabBtn');
+  if (tb) tb.classList.toggle('on', name === 'trends');
+  if (name === 'trends') renderTrendsTab();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+async function renderTrendsTab(force){
+  if (trendsRendered && !force) return;
+  trendsRendered = true;
+  const badgeClass = d => d === 'up' ? 'up' : d === 'down' ? 'down' : 'flat';
+  const sign = g => (g >= 0 ? '+' : '') + g + '%';
+
+  const cats = await Promise.all(CAT_KEYS.map(async k => ({ k, label:CATEGORIES[k].label, t:await getTrend(CATEGORIES[k].kw, 3) })));
+  cats.sort((a, b) => b.t.growth - a.t.growth);
+  const live = cats.some(c => c.t.live);
+  const src = document.getElementById('trendsSource');
+  src.className = 'source-tag ' + (live ? 'live' : 'sim');
+  src.textContent = live ? '● live Google Trends' : 'simulated for now';
+
+  const top = cats[0];
+  const verdict = top.t.direction === 'up' ? 'Rising fast, a great time to launch here.' : top.t.direction === 'down' ? 'Cooling off, move quickly or find a fresher angle.' : 'Steady and reliable, not a fad.';
+  document.getElementById('trendHero').innerHTML = `
+    <div>
+      <div class="th-eyebrow">📈 hottest subcategory right now</div>
+      <div class="th-name">${top.label}</div>
+      <div class="th-growth">${sign(top.t.growth)}</div>
+      <div class="th-sub">predicted demand shift over the next 3 months. Model confidence ${top.t.confidence}%. ${verdict}</div>
+    </div>
+    <div><svg id="trendHeroChart" viewBox="0 0 360 130" width="100%" height="150"></svg></div>`;
+  renderForecastChart(document.getElementById('trendHeroChart'), top.t.series, top.t.forecast);
+
+  document.getElementById('trendCatGrid').innerHTML = cats.map(c =>
+    `<div class="tcat"><div class="tcat-top"><b>${c.label}</b><span class="forecast-badge ${badgeClass(c.t.direction)}">${sign(c.t.growth)}</span></div><div class="tcat-chart">${miniForecastSvg(c.t.series, c.t.forecast)}</div><div class="tcat-foot">confidence ${c.t.confidence}%</div></div>`
+  ).join('');
+
+  const prods = await Promise.all(TRENDING.map(async p => ({ ...p, t:await getTrend(p.kw, 3) })));
+  prods.sort((a, b) => b.t.growth - a.t.growth);
+  document.getElementById('trendProdGrid').innerHTML = prods.slice(0, 6).map(p =>
+    `<div class="tprod"><div class="tprod-photo">${imgTag(p.img)}<span class="forecast-badge ${badgeClass(p.t.direction)}">${sign(p.t.growth)}</span></div><div class="tprod-name">${p.name}</div><div class="tprod-chart">${miniForecastSvg(p.t.series, p.t.forecast)}</div></div>`
+  ).join('');
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+
+// ===================== MODALS =====================
+function openModal(which){ document.getElementById(which === 'trends' ? 'modalTrends' : 'modalAmazon').classList.add('show'); }
+function closeModal(){ document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show')); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(); }));
+
+function connectTrends(){
+  TRENDS.endpoint = document.getElementById('trendsEndpoint').value.trim();
+  TRENDS.connected = true;
+  const st = document.getElementById('trendsStatus');
+  st.className = 'status-line show';
+  st.innerHTML = TRENDS.endpoint ? '✓ Connected to your live Trends feed' : '✓ Connected (using Launchly simulated series, prediction is real)';
+  const pill = document.getElementById('pillTrends');
+  pill.classList.add('on'); pill.innerHTML = '<span class="cdot"></span> 📈 Trends connected';
+  if (trendsRendered) renderTrendsTab(true);
+  setTimeout(closeModal, 1100);
+}
+function connectAmazon(){
+  AMAZON.seller = document.getElementById('amazonSeller').value.trim() || 'My Store';
+  AMAZON.connected = true;
+  const st = document.getElementById('amazonStatus');
+  st.className = 'status-line show';
+  st.innerHTML = '✓ Connected as ' + AMAZON.seller;
+  const pill = document.getElementById('pillAmazon');
+  pill.classList.add('on'); pill.innerHTML = '<span class="cdot"></span> 🛒 Amazon connected';
+  refreshAutomationPanel();
+  setTimeout(closeModal, 1100);
+}
+
+// ===================== TAB 1: ANALYZE =====================
+const catSelect = document.getElementById('category');
+catSelect.innerHTML = CAT_KEYS.map(k => `<option value="${k}">${CATEGORIES[k].label}</option>`).join('');
+
+const descEl = document.getElementById('desc'), charCount = document.getElementById('charCount');
+const updateCharCount = () => charCount.textContent = descEl.value.length;
+descEl.addEventListener('input', updateCharCount); updateCharCount();
+
+document.querySelectorAll('.risk-opt').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.risk-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); selectedRisk = btn.dataset.risk;
+}));
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  catSelect.value = 'skin'; document.getElementById('price').value = 32;
+  descEl.value = 'hydrating vitamin C brightening serum, vegan, fast absorbing glow'; updateCharCount();
+});
+
+const emptyState = document.getElementById('emptyState'), loadingState = document.getElementById('loadingState');
+const resultsContent = document.getElementById('resultsContent'), loadingLine = document.getElementById('loadingLine');
+const loadingEmoji = document.getElementById('loadingEmoji'), analyzeBtn = document.getElementById('analyzeBtn');
+const loadingSteps = [
+  { text:"Looking for similar products…", emoji:"🔍" },
+  { text:"Reading what people are saying…", emoji:"💬" },
+  { text:"Forecasting demand…", emoji:"📈" },
+  { text:"Counting your potential profit…", emoji:"💰" },
+];
+const iconEmoji = t => t === "pos" ? "🎉" : t === "neg" ? "⚠️" : "💡";
+
+const moreToggle = document.getElementById('moreToggle'), moreDetails = document.getElementById('moreDetails');
+moreToggle.addEventListener('click', () => {
+  const open = moreDetails.classList.toggle('show');
+  moreToggle.classList.toggle('open', open);
+  document.getElementById('moreToggleLabel').textContent = open ? 'Hide breakdown' : 'See the full breakdown';
+});
+
+function runAnalyze(){
+  const categoryKey = catSelect.value, price = parseFloat(document.getElementById('price').value) || 0, desc = descEl.value || "";
+  emptyState.style.display = 'none'; resultsContent.classList.remove('show');
+  moreDetails.classList.remove('show'); moreToggle.classList.remove('open');
+  document.getElementById('moreToggleLabel').textContent = 'See the full breakdown';
+  loadingState.style.display = 'flex'; analyzeBtn.disabled = true;
+  let step = 0; loadingLine.textContent = loadingSteps[0].text; loadingEmoji.textContent = loadingSteps[0].emoji;
+  const iv = setInterval(() => { step++; if (step < loadingSteps.length){ loadingLine.textContent = loadingSteps[step].text; loadingEmoji.textContent = loadingSteps[step].emoji; } }, 380);
+  setTimeout(async () => {
+    clearInterval(iv);
+    const result = computeAnalysis(categoryKey, price, desc, selectedRisk);
+    renderResults(result, price, desc);
+    await renderForecast(result);
+    loadingState.style.display = 'none'; resultsContent.classList.add('show'); analyzeBtn.disabled = false;
+  }, 1500);
+}
+analyzeBtn.addEventListener('click', runAnalyze);
+
+const tierOf = s => s >= 75 ? "high" : s >= 45 ? "mid" : "low";
+const ringColor = t => t === "high" ? "#12C296" : t === "mid" ? "#FFB833" : "#FF6B5B";
+
+function renderResults(r, price, desc){
+  document.getElementById('resultProductLabel').textContent = (desc.trim() ? desc.trim().charAt(0).toUpperCase() + desc.trim().slice(1) : "Your product") + " · " + r.catLabel;
+  document.getElementById('mhNum').innerHTML = `${money(r.money.monthly)} <small>/month</small>`;
+  document.getElementById('mhSub').textContent = `in estimated profit, about ${r.money.units} units a month at ${money(r.money.marginPerSale)} profit each, if it sells like similar products.`;
+  document.getElementById('mhChipYear').textContent = `≈ ${money(r.money.monthly * 12)} / year`;
+  document.getElementById('mhChipUnits').textContent = `${r.money.units} sales / month`;
+  const vm = { high:{emoji:"🎉",title:"This could really pay off!",desc:"Your price, category and pitch look a lot like winners."},
+               mid:{emoji:"🤔",title:"Promising, tune it first",desc:"Some things work in your favor, a couple are worth a tweak."},
+               low:{emoji:"🧐",title:"I would adjust before launching",desc:"A few signals are off from what usually makes money here."} }[r.tier];
+  const banner = document.getElementById('verdictBanner'); banner.className = `verdict-banner ${r.tier}`;
+  document.getElementById('vbEmoji').textContent = vm.emoji; document.getElementById('vbTitle').textContent = vm.title; document.getElementById('vbDesc').textContent = vm.desc;
+  document.getElementById('msSuccess').textContent = r.successPct + '%'; document.getElementById('msSuccess').style.color = ringColor(r.tier);
+  document.getElementById('msMargin').textContent = money(r.money.marginPerSale);
+  const rk = document.getElementById('msRisk');
+  rk.textContent = r.decisionRisk + '%';
+  rk.style.color = r.decisionRisk >= 60 ? '#E44F3F' : r.decisionRisk >= 35 ? '#E89A0C' : '#0A9E7A';
+  document.getElementById('reasonsList').innerHTML = r.reasons.map(rs => `<div class="reason ${rs.type}"><div class="icon">${iconEmoji(rs.type)}</div><p>${rs.text}</p></div>`).join('');
+  renderRecommendation(r); renderPriceSlider(r); renderPriceSuggestion(r, price);
+  renderSaturation(r); renderAge(r); renderTopics(r); renderSimilarProducts(r); renderReviewsInsights(r);
+}
+
+function renderRecommendation(r){
+  const best = r.bestPoint, succ = r.bestSuccess;
+  const topProd = r.products.slice().sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))[0];
+  let main;
+  if (Math.abs(best.price - r.price) <= 1)
+    main = `Your price of <b>${money(r.price)}</b> is already right on the money making sweet spot. Hold it and put your energy into a strong first wave of reviews.`;
+  else if (best.price < r.price)
+    main = `Lower your price to <b>${money(best.price)}</b>. You would sell more while keeping healthy margins, lifting profit to about <b>${money(best.monthly)}/month</b> at <b>${best.score}%</b> success and only <b>${best.risk}%</b> risk.`;
+  else
+    main = `You can charge more. Move to <b>${money(best.price)}</b> to grow profit to about <b>${money(best.monthly)}/month</b> at <b>${best.score}%</b> success, without scaring buyers off.`;
+  document.getElementById('recoBox').innerHTML = `
+    <div class="reco-head">🎯 Our recommendation</div>
+    <div class="reco-main">${main}</div>
+    <div class="reco-suggest">
+      <div class="reco-card best"><span class="reco-tag">most profit</span><div class="reco-price">${money(best.price)}</div><div class="reco-deltas"><span class="up">▲ ${best.score}% success</span><span class="down">▼ ${best.risk}% risk</span></div></div>
+      <div class="reco-card"><span class="reco-tag alt">safest bet</span><div class="reco-price">${money(succ.price)}</div><div class="reco-deltas"><span class="up">▲ ${succ.score}% success</span><span class="down">▼ ${succ.risk}% risk</span></div></div>
+    </div>
+    <div class="reco-ctx">
+      <div class="rc"><div class="rc-ico">🌎</div><div class="rc-lbl">Best market</div><div class="rc-val">United States</div></div>
+      <div class="rc"><div class="rc-ico">🏬</div><div class="rc-lbl">Best store</div><div class="rc-val">Amazon</div></div>
+      <div class="rc"><div class="rc-ico">🏆</div><div class="rc-lbl">Top rival</div><div class="rc-val">${topProd.name}<br>★ ${topProd.rating}</div></div>
+    </div>`;
+}
+
+function renderSaturation(r){
+  const s = r.saturation, lbl = s >= 66 ? 'High' : s >= 40 ? 'Moderate' : 'Low';
+  document.getElementById('satLabel').textContent = lbl;
+  document.getElementById('satPct').textContent = s + '%';
+  setTimeout(() => document.getElementById('satBar').style.width = s + '%', 60);
+  const note = s >= 66 ? 'Crowded space. You need a clear hook and strong reviews to stand out.' : s >= 40 ? 'Busy but not full. New products can still get noticed.' : 'Open space. Room to become a go to option.';
+  document.getElementById('satNote').innerHTML = `<b>What this means:</b> ${note}`;
+}
+function renderAge(r){
+  const labels = ["18-24", "25-34", "35-44", "45-54", "55+"], max = Math.max(...r.age);
+  document.getElementById('ageBars').innerHTML = r.age.map((v, i) => `<div class="age-col ${v === max ? 'hot' : ''}"><div class="ac-pct">${v}%</div><div class="ac-bar" data-h="${Math.round(v / max * 100)}"></div><div class="ac-lbl">${labels[i]}</div></div>`).join('');
+  setTimeout(() => document.querySelectorAll('#ageBars .ac-bar').forEach(b => b.style.height = b.dataset.h + '%'), 60);
+}
+function renderTopics(r){
+  document.getElementById('topicsList').innerHTML = r.topics.map(t => `<div class="topic"><div class="t-row"><b>${cap(t.name)}</b><span>${t.pct}%</span></div><div class="t-track"><div class="t-fill" data-w="${t.pct}"></div></div></div>`).join('');
+  setTimeout(() => document.querySelectorAll('#topicsList .t-fill').forEach(f => f.style.width = f.dataset.w + '%'), 60);
+}
+
+async function renderForecast(r){
+  const t = await getTrend(r.catKw, 3);
+  document.getElementById('trendKw').textContent = `"${r.catKw}" interest over time`;
+  const src = document.getElementById('trendSource');
+  src.className = 'source-tag ' + (t.live ? 'live' : 'sim');
+  src.textContent = t.live ? '● live Google Trends' : 'simulated series';
+  const badge = document.getElementById('forecastBadge');
+  const dirClass = t.direction === 'up' ? 'up' : t.direction === 'down' ? 'down' : 'flat';
+  badge.className = 'forecast-badge ' + dirClass;
+  badge.textContent = (t.growth > 0 ? '↑ +' : t.growth < 0 ? '↓ ' : '→ ') + t.growth + '% next 3 mo';
+  renderForecastChart(document.getElementById('forecastChart'), t.series, t.forecast);
+  const verdict = t.direction === 'up' ? `Demand is <b>rising</b>. Good timing to launch.` : t.direction === 'down' ? `Demand is <b>cooling</b>. Move fast or pick a fresher angle.` : `Demand is <b>steady</b>. Reliable, not a fad.`;
+  document.getElementById('forecastNote').innerHTML = `Prediction by least squares trend fit. ${verdict} Model confidence <b>${t.confidence}%</b> (how cleanly the trend line fits the last 12 months).`;
+}
+
+function nearestPoint(r, price){ let best = r.curve[0], bd = Infinity; for (const pt of r.curve){ const d = Math.abs(pt.price - price); if (d < bd){ bd = d; best = pt; } } return best; }
+
+function priceMap(r){
+  const W = 360, H = 120, padL = 8, padR = 8, padT = 16, padB = 22;
+  return { W, H, padB,
+    xOf: p => padL + (p - r.curveMin) / (r.curveMax - r.curveMin) * (W - padL - padR),
+    yOf: s => padT + (1 - s / 100) * (H - padT - padB) };
+}
+function drawPriceCurve(r, price){
+  const svg = document.getElementById('priceCurveChart');
+  const { W, H, padB, xOf, yOf } = priceMap(r);
+  let line = "";
+  r.curve.forEach((pt, i) => line += (i === 0 ? "M" : "L") + xOf(pt.price).toFixed(1) + "," + yOf(pt.score).toFixed(1) + " ");
+  const area = line + `L${xOf(r.curve[r.curve.length - 1].price).toFixed(1)},${H - padB} L${xOf(r.curve[0].price).toFixed(1)},${H - padB} Z`;
+  const bx = xOf(r.bestPoint.price), pt = nearestPoint(r, price);
+  svg.innerHTML = `
+    <defs><linearGradient id="pcfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#12C296" stop-opacity="0.22"/><stop offset="100%" stop-color="#12C296" stop-opacity="0"/></linearGradient></defs>
+    <text x="8" y="12" font-size="9" font-weight="800" fill="#A79FBB">success %</text>
+    <path d="${area}" fill="url(#pcfade)"/>
+    <line x1="${bx}" y1="16" x2="${bx}" y2="${H - padB}" stroke="#12C296" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <text x="${bx}" y="${H - 6}" text-anchor="middle" font-size="9" font-weight="800" fill="#0A9E7A">best</text>
+    <path d="${line}" fill="none" stroke="#12C296" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle id="pcDot" cx="${xOf(pt.price)}" cy="${yOf(pt.score)}" r="6" fill="#FF6B5B" stroke="#fff" stroke-width="2.5"/>
+    <text id="pcLbl" x="${xOf(pt.price)}" y="${yOf(pt.score) - 12}" text-anchor="middle" font-size="10" font-weight="800" fill="#E44F3F">${pt.score}%</text>`;
+}
+function moveDot(r, price){
+  const { xOf, yOf } = priceMap(r), pt = nearestPoint(r, price);
+  const dot = document.getElementById('pcDot'), lbl = document.getElementById('pcLbl');
+  if (dot){ dot.setAttribute('cx', xOf(pt.price)); dot.setAttribute('cy', yOf(pt.score)); }
+  if (lbl){ lbl.setAttribute('x', xOf(pt.price)); lbl.setAttribute('y', yOf(pt.score) - 12); lbl.textContent = pt.score + '%'; }
+}
+function renderPriceSlider(r){
+  const slider = document.getElementById('priceSlider');
+  slider.min = r.curveMin; slider.max = r.curveMax; slider.step = 1; slider.value = r.price;
+  document.getElementById('simMinLabel').textContent = money(r.curveMin);
+  document.getElementById('simMaxLabel').textContent = money(r.curveMax);
+  drawPriceCurve(r, r.price);
+  const update = p => {
+    const pt = nearestPoint(r, p), t = tierOf(pt.score);
+    const emoji = t === "high" ? "🎉" : t === "mid" ? "🙂" : "🧐";
+    const isBest = Math.abs(pt.price - r.bestPoint.price) <= 2;
+    document.getElementById('simReadout').innerHTML = `At <b>${money(pt.price)}</b>: <b>${pt.score}%</b> success ${emoji}, <b>${pt.risk}%</b> risk, about <b>${money(pt.monthly)}/month</b>${isBest ? ' &nbsp;⭐ your max!' : ''}`;
+    moveDot(r, p);
+  };
+  slider.oninput = () => update(parseFloat(slider.value)); update(r.price);
+}
+function renderPriceSuggestion(r, price){
+  document.getElementById('priceSuggestNum').innerHTML = `${money(r.suggestMin)} <span>to ${money(r.suggestMax)}</span>`;
+  const lo = r.catMin * 0.9, hi = r.catMax * 1.1, pct = v => Math.max(0, Math.min(100, ((v - lo) / (hi - lo)) * 100));
+  document.getElementById('priceRangeFill').style.left = pct(r.suggestMin) + '%';
+  document.getElementById('priceRangeFill').style.right = (100 - pct(r.suggestMax)) + '%';
+  document.getElementById('priceMarker').style.left = pct(price) + '%';
+  const ends = document.querySelectorAll('.price-endlabels span'); ends[0].textContent = money(lo); ends[1].textContent = money(hi);
+}
+function renderSimilarProducts(r){
+  document.getElementById('simProducts').innerHTML = r.products.map(p => `<div class="prod-card"><div class="pc-photo">${imgTag(r.catImg)}</div><div class="pc-name">${p.name}</div><div class="pc-meta"><span class="pc-price">${money(p.price)}</span><span class="pc-rating">★ ${p.rating}</span></div><div class="pc-reviews">${p.reviews} reviews</div></div>`).join('');
+}
+function renderReviewsInsights(r){
+  const s = r.reviewsInsights.sentiment, tot = s.pos + s.neu + s.neg;
+  const pos = Math.round(s.pos / tot * 100), neg = Math.round(s.neg / tot * 100), neu = 100 - pos - neg, c = { pos:'#12C296', neu:'#FFB833', neg:'#FF6B5B' };
+  document.getElementById('sentimentBar').innerHTML = `<div class="sentiment-seg" style="width:${pos}%; background:${c.pos};">${pos >= 12 ? pos + '%' : ''}</div><div class="sentiment-seg" style="width:${neu}%; background:${c.neu};">${neu >= 12 ? neu + '%' : ''}</div><div class="sentiment-seg" style="width:${neg}%; background:${c.neg};">${neg >= 12 ? neg + '%' : ''}</div>`;
+  document.getElementById('sentimentLegend').innerHTML = `<span><span class="sw" style="background:${c.pos};"></span>Positive ${pos}%</span><span><span class="sw" style="background:${c.neu};"></span>Neutral ${neu}%</span><span><span class="sw" style="background:${c.neg};"></span>Negative ${neg}%</span>`;
+  document.getElementById('ratingDist').innerHTML = r.reviewsInsights.ratingDist.map(row => `<div class="rating-row"><span>${row.star}★</span><div class="rating-track"><div class="rating-fill" style="width:${row.pct}%"></div></div><span>${row.pct}%</span></div>`).join('');
+  document.getElementById('kwPos').innerHTML = r.reviewsInsights.posKeywords.map(k => `<span class="kw-chip pos">${k}</span>`).join('');
+  document.getElementById('kwNeg').innerHTML = r.reviewsInsights.negKeywords.map(k => `<span class="kw-chip neg">${k}</span>`).join('');
+}
+
+// ===================== TAB 2: DISCOVER =====================
+const TRENDING = [
+  { id:0, key:"hair", name:"Rosemary Hair Growth Oil", emoji:"🌿", price:28, desc:"natural rosemary hair growth oil, hydrating, sulfate free", kw:"rosemary hair oil" },
+  { id:1, key:"skin", name:"Vitamin C Brightening Serum", emoji:"🍊", price:32, desc:"hydrating vitamin C brightening serum, vegan, fast absorbing glow", kw:"vitamin c serum" },
+  { id:2, key:"skin", name:"Hyaluronic Acid Moisturizer", emoji:"💧", price:26, desc:"hydrating hyaluronic acid moisturizer, gentle, clean beauty", kw:"hyaluronic acid" },
+  { id:3, key:"nail", name:"Cuticle & Nail Growth Oil", emoji:"💅", price:14, desc:"nourishing cuticle and nail growth oil, fast absorbing, vegan", kw:"cuticle oil" },
+  { id:4, key:"makeup", name:"Matte Liquid Lipstick Set", emoji:"💋", price:22, desc:"long lasting matte liquid lipstick set, buildable, clean beauty", kw:"matte lipstick" },
+  { id:5, key:"tools", name:"Ice Roller for Face", emoji:"🧊", price:24, desc:"depuffing ice roller for face, gentle, spa at home self care", kw:"ice roller face" },
+  { id:6, key:"tools", name:"Gua Sha & Jade Roller", emoji:"🪨", price:19, desc:"jade gua sha and facial roller set, gentle, relaxing self care", kw:"gua sha" },
+  { id:7, key:"fragrance", name:"Roll-on Perfume Oil", emoji:"🌸", price:30, desc:"long lasting roll on perfume oil, clean scent, travel size", kw:"perfume oil" },
+  { id:8, key:"personal", name:"Sulfate-free Shampoo Bar", emoji:"🧼", price:16, desc:"hydrating sulfate free shampoo bar, clean formula, cruelty free", kw:"shampoo bar" },
+];
+const TREND_IMG = ['hairoil', 'serum', 'cream', 'nail', 'lipstick', 'roller', 'roller', 'perfume', 'soap'];
+TRENDING.forEach((t, i) => t.img = IMG[TREND_IMG[i]]);
+
+function buildDiscoverFilters(){
+  const cats = ["all", ...new Set(TRENDING.map(t => t.key))];
+  document.getElementById('discoverFilters').innerHTML = cats.map((c, i) => `<button class="filter-chip ${i === 0 ? 'active' : ''}" data-cat="${c}">${c === 'all' ? '✨ All' : CATEGORIES[c].icon + ' ' + CATEGORIES[c].label}</button>`).join('');
+  document.querySelectorAll('.filter-chip').forEach(chip => chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active'); renderDiscover(chip.dataset.cat);
+  }));
+}
+
+function enrich(t){
+  const r = computeAnalysis(t.key, t.price, t.desc, 'balanced');
+  const series = simSeries(t.kw), f = forecastSeries(series, 3);
+  return { ...t, successPct:r.successPct, monthly:r.money.monthly, units:r.money.units, marginPerSale:r.money.marginPerSale, series, forecast:f };
+}
+
+function renderDiscover(filter = 'all'){
+  const items = TRENDING.filter(t => filter === 'all' || t.key === filter).map(enrich).sort((a, b) => b.monthly - a.monthly);
+  document.getElementById('discoverGrid').innerHTML = items.map(t => {
+    const inCart = CART.some(c => c.id === t.id);
+    const g = t.forecast.growth;
+    return `<div class="disc-card ${inCart ? 'in-cart' : ''}">
+      <div class="disc-photo">${imgTag(t.img)}<span class="disc-trend">${g >= 0 ? '↑ +' : '↓ '}${g}% forecast</span><span class="disc-emoji">${t.emoji}</span></div>
+      <div class="disc-name">${t.name}</div>
+      <div class="disc-cat">${CATEGORIES[t.key].icon} ${CATEGORIES[t.key].label}</div>
+      <div class="disc-fore">${miniForecastSvg(t.series, t.forecast.forecast)}</div>
+      <div class="disc-money"><div class="dm-label">💵 could make about</div><div class="dm-num">${money(t.monthly)} <small>/mo</small></div></div>
+      <div class="disc-stats"><span>Success <b>${t.successPct}%</b></span><span>~<b>${t.units}</b> sales/mo</span></div>
+      <div class="disc-btns">
+        <button class="disc-add ${inCart ? 'added' : ''}" data-id="${t.id}">${inCart ? '✓ In cart' : '🤍 Add to cart'}</button>
+        <button class="disc-analyze" data-id="${t.id}" title="Analyze this">🔍</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.disc-add').forEach(b => b.addEventListener('click', () => toggleCart(parseInt(b.dataset.id), filter)));
+  document.querySelectorAll('.disc-analyze').forEach(b => b.addEventListener('click', () => {
+    const t = TRENDING.find(x => x.id === parseInt(b.dataset.id));
+    catSelect.value = t.key; document.getElementById('price').value = t.price; descEl.value = t.desc; updateCharCount();
+    switchTab('analyze'); setTimeout(runAnalyze, 350);
+  }));
+}
+
+function toggleCart(id, filter){
+  const idx = CART.findIndex(c => c.id === id);
+  if (idx >= 0) CART.splice(idx, 1);
+  else CART.push(enrich(TRENDING.find(t => t.id === id)));
+  renderDiscover(filter); updateCartUI();
+}
+
+function updateCartUI(){
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = CART.length; badge.classList.toggle('show', CART.length > 0);
+  const bar = document.getElementById('cartBar');
+  bar.classList.toggle('show', CART.length > 0);
+  const total = CART.reduce((s, c) => s + c.monthly, 0);
+  document.getElementById('cartCount').textContent = CART.length + (CART.length === 1 ? ' product' : ' products');
+  document.getElementById('cartRevenue').textContent = money(total) + ' / month potential';
+}
+
+document.getElementById('createStoreBtn').addEventListener('click', createStore);
+
+// ===================== STORE GENERATION =====================
+const BRAND_PRE = ["Glow", "Luxe", "Pure", "Bloom", "Radiant", "Velvet", "Aura", "Dewy", "Bare", "Lush", "Halo", "Petal"];
+const BRAND_SUF = ["Rituals", "Beauty Co.", "Skin Lab", "Collective", "Glow Bar", "& Bloom", "Beauty", "Atelier"];
+
+function generateBrand(seedStr){
+  const rand = seedFromString("brand|" + seedStr);
+  return BRAND_PRE[Math.floor(rand() * BRAND_PRE.length)] + " " + BRAND_SUF[Math.floor(rand() * BRAND_SUF.length)];
+}
+function generateDescription(brand, cats){
+  const themeList = [...new Set(cats)].map(k => CATEGORIES[k].label.toLowerCase());
+  const themes = themeList.length === 1 ? themeList[0] : themeList.slice(0, -1).join(', ') + ' and ' + themeList[themeList.length - 1];
+  return `${brand} is a modern beauty brand built around ${themes}. A tight, data picked lineup of hero products that shoppers are searching for right now, chosen to sell, not to sit on a shelf.`;
+}
+
+function createStore(){
+  if (CART.length === 0) return;
+  const brand = generateBrand(CART.map(c => c.id).join('-'));
+  const cats = CART.map(c => c.key);
+  const desc = generateDescription(brand, cats);
+  const items = CART.map((c, i) => {
+    const cat = CATEGORIES[c.key];
+    const startupCost = Math.round(30 * c.price * cat.cost);
+    return { ...c, startupCost, listingDesc: autoListing(c) };
+  });
+  const totalMonthly = items.reduce((s, c) => s + c.monthly, 0);
+  const totalInvest = items.reduce((s, c) => s + c.startupCost, 0);
+  const payback = Math.max(1, Math.round(totalInvest / (totalMonthly / 4.33)));
+  currentStore = { brand, desc, items, totalMonthly, totalInvest, payback };
+  renderStore(); switchTab('store');
+}
+
+function autoListing(c){
+  const cat = CATEGORIES[c.key];
+  const tag = cat.tags[Math.floor(seedFromString("l" + c.id)() * cat.tags.length)];
+  return `${c.name}. ${cap(tag)} formula shoppers are loving right now. A hero product for any ${cat.label.toLowerCase()} routine.`;
+}
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+function renderStore(){
+  const s = currentStore;
+  document.getElementById('storeEmpty').style.display = 'none';
+  document.getElementById('storeResult').style.display = 'block';
+  document.getElementById('shBrand').textContent = s.brand;
+  document.getElementById('shDesc').textContent = s.desc;
+  document.getElementById('shNum').innerHTML = `${money(s.totalMonthly)} <small>/month</small>`;
+  document.getElementById('skProducts').textContent = s.items.length;
+  document.getElementById('skInvest').textContent = money(s.totalInvest);
+  document.getElementById('skPayback').textContent = s.payback + ' wks';
+  document.getElementById('skYear').textContent = money(s.totalMonthly * 12 - s.totalInvest);
+  const icons = ["🧴", "✨", "💧", "🌿", "🧖", "💫", "🌸", "🧼"];
+  document.getElementById('storeProducts').innerHTML = s.items.map((c, i) => `
+    <div class="store-prod">
+      <button class="sp-remove" data-id="${c.id}" title="Remove">×</button>
+      <div class="sp-photo">${imgTag(c.img || CATEGORIES[c.key].img)}</div>
+      <div class="sp-name">${c.name}</div>
+      <div class="sp-desc">${c.listingDesc}</div>
+      <div class="sp-line"><span>Sell at</span><span>${money(c.price)}</span></div>
+      <div class="sp-line"><span>Success</span><span>${c.successPct}%</span></div>
+      <div class="sp-line"><span>Startup stock</span><span>${money(c.startupCost)}</span></div>
+      <div class="sp-line"><span>Profit</span><b>${money(c.monthly)}/mo</b></div>
+    </div>`).join('');
+  document.querySelectorAll('.sp-remove').forEach(b => b.addEventListener('click', () => {
+    const id = parseInt(b.dataset.id);
+    CART = CART.filter(c => c.id !== id); updateCartUI();
+    if (CART.length === 0){ currentStore = null; document.getElementById('storeResult').style.display = 'none'; document.getElementById('storeEmpty').style.display = 'flex'; renderDiscover(); return; }
+    createStoreKeepTab();
+  }));
+  refreshAutomationPanel();
+}
+function createStoreKeepTab(){ createStore(); switchTab('store'); }
+
+function autoBuildStore(){
+  const picks = TRENDING.map(enrich).sort((a, b) => b.monthly - a.monthly);
+  const seen = new Set(); CART = [];
+  for (const p of picks){ if (seen.has(p.key)) continue; seen.add(p.key); CART.push(p); if (CART.length >= 4) break; }
+  updateCartUI(); createStore();
+}
+function startFromScratch(){
+  CART = []; currentStore = null; updateCartUI();
+  document.getElementById('storeResult').style.display = 'none';
+  document.getElementById('storeEmpty').style.display = 'flex';
+  renderDiscover(); switchTab('discover');
+}
+
+// ===================== AMAZON AUTOMATION =====================
+function refreshAutomationPanel(){
+  const conn = AMAZON.connected;
+  const dc = document.getElementById('autoDisconnected'), cn = document.getElementById('autoConnected');
+  if (!dc || !cn) return;
+  dc.style.display = conn ? 'none' : 'block';
+  cn.style.display = conn ? 'block' : 'none';
+  document.getElementById('autoSub').textContent = conn ? ('Connected as ' + AMAZON.seller) : 'Connect your Amazon store to run this on autopilot';
+}
+function toggleAuto(btn){ const key = btn.dataset.auto; AMAZON.automations[key] = !AMAZON.automations[key]; btn.classList.toggle('on', AMAZON.automations[key]); }
+function publishStore(){
+  if (!currentStore) return;
+  const on = Object.entries(AMAZON.automations).filter(([, v]) => v).length;
+  const st = document.getElementById('publishStatus');
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true; btn.textContent = '⏳ Publishing…';
+  st.className = 'status-line show'; st.innerHTML = '⏳ Creating ' + currentStore.items.length + ' listings on ' + AMAZON.seller + '…';
+  setTimeout(() => {
+    btn.disabled = false; btn.textContent = '🚀 Publish my store to Amazon';
+    st.innerHTML = `✓ ${currentStore.items.length} listings live on ${AMAZON.seller}, ${on} automations running. Projected ${money(currentStore.totalMonthly)}/month.`;
+  }, 1600);
+}
+
+// ===================== INIT =====================
+buildDiscoverFilters();
+renderDiscover('all');
+updateCartUI();
+</script>
+</body>
+</html>

@@ -1,17 +1,49 @@
-# Datos descargados y resultados generados
-data/raw/
-data/cache/
-outputs/*
-!outputs/.gitkeep
-
-# Python / Jupyter
+# Python
 __pycache__/
 *.py[cod]
-.ipynb_checkpoints/
 .venv/
-venv/
 .env
+.env.*
+!.env.example
+.ipynb_checkpoints/
 
-# Credenciales
-*.token
-credentials.json
+# Node
+node_modules/
+.next/
+dist/
+
+# Raw and processed datasets
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+*.jsonl
+*.parquet
+*.csv
+*.feather
+*.arrow
+*.duckdb
+
+# Large ML artifacts
+*.joblib
+*.pkl
+*.onnx
+*.bin
+*.npy
+*.npz
+*.faiss
+
+# Outputs (keep READMEs/manifests only)
+output/models/*
+!output/models/.gitkeep
+output/predictions/*
+!output/predictions/.gitkeep
+
+# Secrets
+*.pem
+*.key
+supabase/.temp/
+
+# OS
+.DS_Store
+Thumbs.db
