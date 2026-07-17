@@ -96,29 +96,35 @@ Usen Oracle Cloud Infrastructure Object Storage para los datasets pesados porque
 
 Build in this order:
 
-1. Dataset A for training.
-2. Target definition and leakage audit.
-3. Baseline model.
-4. Calibration.
-5. Comparable products.
-6. Risk and profit formulas.
-7. FastAPI endpoints.
-8. Frontend screens.
-9. Power BI validation.
+1. Finalize `Master_Beauty_Dataset` from the notebook pipeline.
+2. Finalize `Master_Reviews_Dataset` from the notebook pipeline.
+3. Define whether `Master_Reviews_Dataset_Subset` is needed for the current sprint.
+4. Build Dataset A for training.
+5. Define the target and run the leakage audit.
+6. Build the baseline model.
+7. Add calibration.
+8. Build comparable products.
+9. Wire the risk and profit formulas.
+10. Build FastAPI endpoints.
+11. Build frontend screens.
+12. Validate in Power BI.
 
 ### Español
 
 Construyan en este orden:
 
-1. Dataset A para entrenamiento.
-2. Definición del target y auditoría de leakage.
-3. Modelo baseline.
-4. Calibración.
-5. Productos comparables.
-6. Fórmulas de risk y profit.
-7. Endpoints de FastAPI.
-8. Pantallas del frontend.
-9. Validación en Power BI.
+1. Finalizar `Master_Beauty_Dataset` desde el notebook.
+2. Finalizar `Master_Reviews_Dataset` desde el notebook.
+3. Definir si `Master_Reviews_Dataset_Subset` hace falta para este sprint.
+4. Construir Dataset A para entrenamiento.
+5. Definir el target y hacer la auditoría de leakage.
+6. Construir el baseline.
+7. Agregar calibración.
+8. Construir comparables.
+9. Conectar risk y profit.
+10. Construir endpoints de FastAPI.
+11. Construir frontend.
+12. Validar en Power BI.
 
 ## 6. P0 requirements checklist / Checklist de requerimientos P0
 
@@ -141,15 +147,19 @@ Construyan en este orden:
 
 **English**
 
-- Clean and version datasets.
-- Build Dataset A, B, and C.
+- Reproduce the notebook outputs.
+- Build `Master_Beauty_Dataset`.
+- Build `Master_Reviews_Dataset`.
+- Decide if `Master_Reviews_Dataset_Subset` is needed.
 - Create manifests and exports.
 - Store heavy files in OCI Object Storage.
 
 **Español**
 
-- Limpiar y versionar los datasets.
-- Construir Dataset A, B y C.
+- Reproducir las salidas del notebook.
+- Construir `Master_Beauty_Dataset`.
+- Construir `Master_Reviews_Dataset`.
+- Decidir si hace falta `Master_Reviews_Dataset_Subset`.
 - Crear manifests y exports.
 - Guardar archivos pesados en OCI Object Storage.
 
@@ -223,13 +233,14 @@ Construyan en este orden:
 
 Week 1:
 
-- Finish data cleaning and dataset split.
+- Reproduce the notebook outputs.
+- Freeze the file naming convention.
 - Define the target and the leakage rules.
 - Confirm the storage architecture.
 
 Week 2:
 
-- Train the baseline.
+- Build Dataset A and the priced subset.
 - Calibrate the score.
 - Validate comparable products.
 
@@ -249,13 +260,14 @@ Week 4:
 
 Semana 1:
 
-- Terminar cleaning y split de datasets.
+- Reproducir las salidas del notebook.
+- Congelar la convención de nombres.
 - Definir target y reglas de leakage.
 - Confirmar la arquitectura de storage.
 
 Semana 2:
 
-- Entrenar el baseline.
+- Construir Dataset A y el subconjunto con precio.
 - Calibrar el score.
 - Validar los comparables.
 

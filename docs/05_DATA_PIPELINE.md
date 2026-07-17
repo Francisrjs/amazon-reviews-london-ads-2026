@@ -2,13 +2,21 @@
 
 ## 1. Sources
 
+- `notebooks/ADSB_Project.ipynb` as the current cleaning reference.
 - Amazon Reviews'23 metadata for Beauty and Personal Care.
 - Amazon Reviews'23 reviews for Beauty and Personal Care.
 - Optional external sources: trends, fees, and name or actuarial data.
 
 ## 2. Confirmed notebook status
 
-The current notebook performed:
+The current notebook performed the initial cleaning and produced these named artifacts:
+
+- `Master_Beauty_Dataset`
+- `Master_Reviews_Dataset`
+
+The notebook also shows a price-valid and review-filtered working subset that can be reused for exploration and NLP, but those outputs should be treated as derived artifacts, not as the only source of truth.
+
+Observed notebook results:
 
 | Step | Observed result |
 |---|---|
@@ -25,18 +33,18 @@ The current notebook performed:
 
 ## 3. Critical finding
 
-The current CSV is filtered by:
+The current notebook filtered the working CSV by:
 
 1. Available price.
 2. At least 50 reviews.
 3. Non-null `main_category`.
 
-This is useful for review NLP and popular comparables, but it is risky for the success model:
+This is useful for review NLP and popular comparables, but it is too restrictive as the only training source for the full success model:
 
 - It removes low-performing products.
 - It introduces survivorship bias.
 - The target depends on review volume, so filtering by volume before labeling reduces the negative class artificially.
-- It removes 63 percent of products with no price, even though missing price can itself be a signal.
+- It removes products with no price, even though missing price may still be useful for a general catalog snapshot.
 - `main_category` was identified as noise; the reliable taxonomy is `categories[1]`.
 
 ## 4. Required datasets
@@ -45,10 +53,15 @@ This is useful for review NLP and popular comparables, but it is risky for the s
 
 Used for the success classifier.
 
-- All products with valid real taxonomy.
-- No minimum review threshold.
+- Keep the broader product catalog with valid real taxonomy.
+- No minimum review threshold at the source level.
 - Keep null price plus `price_is_missing`.
 - Use rating and reviews only to create the target.
+
+Recommended working rule for the MVP:
+
+- if the current experiment requires price-based outputs, use the priced slice of Dataset A for that experiment;
+- if the experiment is only catalog coverage or success proxy analysis, keep the full snapshot and carry the missing-price flag.
 
 ### Dataset B - `catalog_priced_subset`
 
@@ -65,6 +78,7 @@ Used for sentiment, topics, and recurring complaints.
 - Products with a configurable minimum volume, for example at least 50 reviews.
 - Tag verified and unverified reviews.
 - Partition by subcategory and year.
+- Derived from `Master_Reviews_Dataset`, not a separate source.
 
 ### Dataset D - `app_comparables_catalog`
 
@@ -81,16 +95,17 @@ Used for online inference.
 flowchart TD
     A[Raw JSONL in object storage] --> B[Schema validation]
     B --> C[Clean taxonomy]
-    C --> D[Products snapshot]
+    C --> D[Master_Beauty_Dataset]
     A --> E[Reviews streaming]
     E --> F[Review aggregates]
-    E --> G[NLP subset]
-    D --> H[Target creation]
-    H --> I[Training dataset]
-    D --> J[Priced subset]
-    D --> K[Comparable catalog]
-    G --> L[Sentiment/topics outputs]
-    I --> M[Model artifacts]
+    E --> G[Master_Reviews_Dataset]
+    G --> H[Master_Reviews_Dataset_Subset]
+    D --> I[Target creation]
+    I --> J[Training dataset]
+    D --> K[Priced subset]
+    D --> L[Comparable catalog]
+    H --> M[Sentiment/topics outputs]
+    J --> N[Model artifacts]
 ```
 
 ## 6. Format and storage
@@ -100,14 +115,18 @@ flowchart TD
 - Partitions: `subcategory=.../year=...` for reviews.
 - BI outputs: Parquet or small CSV.
 - Manifests: JSON or YAML with checksum, date, and schema.
+- Keep the notebook output names aligned with the documented artifacts:
+  - `Master_Beauty_Dataset`
+  - `Master_Reviews_Dataset`
+  - `Master_Reviews_Dataset_Subset`
 
 ## 7. Data structure in Git
 
 ```text
 data/
 ├── fake/        # small synthetic samples
-├── raw/         # .gitignore, external files
-├── processed/   # .gitignore, local outputs
+├── raw/         # original raw inputs, if kept locally
+├── processed/   # derived outputs and clean exports
 └── external/    # documentation/manifests, no sensitive data
 ```
 
