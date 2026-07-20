@@ -1,10 +1,12 @@
 # API and database
 
+> **Current implementation status:** The local FastAPI service currently implements `/health`, `/v1/models/current`, `/v1/predict/success`, `/v1/comparables`, `/v1/price-scenarios`, and `/v1/analyses`. The proposed persistence, history, profit, and Supabase behavior in this document are not implemented yet. Use [18_BACKEND_RUNBOOK.md](18_BACKEND_RUNBOOK.md) to run the current service.
+
 ## 1. Proposed endpoints
 
 | Method | Endpoint | Priority | Function |
 |---|---|---:|---|
-| POST | `/v1/analyses` | P0 | Run the full analysis and persist it |
+| POST | `/v1/analyses` | P0 | Run the full analysis; persistence is planned |
 | GET | `/v1/analyses/{id}` | P0 | Retrieve an analysis |
 | GET | `/v1/analyses` | P0 | User history |
 | POST | `/v1/predict/success` | P0 | Calibrated score |

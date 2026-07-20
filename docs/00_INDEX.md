@@ -17,6 +17,9 @@
 13. [Risks, ethics, and limitations](13_RISKS_ETHICS.md)
 14. [Definition of Done](14_DEFINITION_OF_DONE.md)
 15. [References](15_REFERENCES.md)
+16. [Backend runbook](18_BACKEND_RUNBOOK.md)
+17. [Next.js frontend architecture](19_NEXTJS_FRONTEND.md)
+18. [Supabase Auth and database design](20_SUPABASE_AUTH_DATABASE.md)
 
 ## How to read this repository
 
