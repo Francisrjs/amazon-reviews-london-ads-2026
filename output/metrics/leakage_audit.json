@@ -1,0 +1,27 @@
+{
+  "note": "CV sin fuga: TF-IDF y price_fit ajustados SOLO en train por fold. El target se mantiene como definición poblacional fija (no es feature).",
+  "leaky_full_fit": {
+    "accuracy": 0.7476,
+    "precision": 0.5286,
+    "recall": 0.298,
+    "f1": 0.3811,
+    "roc_auc": 0.7151,
+    "pr_auc": 0.4717,
+    "brier": 0.1862,
+    "ece_uncal": 0.1187,
+    "ece_isotonic": 0.0029
+  },
+  "leakfree_infold": {
+    "accuracy": 0.7484,
+    "precision": 0.5317,
+    "recall": 0.2975,
+    "f1": 0.3815,
+    "roc_auc": 0.7149,
+    "pr_auc": 0.4713,
+    "brier": 0.1862,
+    "ece_uncal": 0.1188,
+    "ece_isotonic": 0.0017
+  },
+  "delta_roc_auc": -0.0002,
+  "delta_pr_auc": -0.0004
+}

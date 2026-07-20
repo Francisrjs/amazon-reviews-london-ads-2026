@@ -1,0 +1,78 @@
+{
+  "T1_holdout": {
+    "test_n": 9287,
+    "roc_auc": 0.707,
+    "pr_auc": 0.4621,
+    "brier_raw": 0.1876,
+    "brier_calibrated": 0.1721,
+    "ece_raw": 0.12,
+    "ece_calibrated": 0.0066,
+    "base_rate": 0.2608
+  },
+  "T2_baselines_roc_auc": {
+    "dummy_stratified": 0.5044,
+    "dummy_most_frequent": 0.5,
+    "logreg_structured_only": 0.5666,
+    "logreg_price_fit_only": 0.5536,
+    "random_forest_full": 0.707
+  },
+  "T3_label_permutation": {
+    "permuted_auc_mean": 0.4957,
+    "permuted_auc_std": 0.002,
+    "real_auc": 0.707,
+    "verdict": "PASA: la señal es real (AUC real >> AUC permutado ~0.5)"
+  },
+  "T4_stability": {
+    "aucs": [
+      0.707,
+      0.7257,
+      0.71,
+      0.7149,
+      0.7102
+    ],
+    "mean": 0.7136,
+    "std": 0.0066
+  },
+  "T5_per_subcategory": {
+    "Hair Care": {
+      "n": 2818,
+      "roc_auc": 0.7293,
+      "base_rate": 0.258
+    },
+    "Skin Care": {
+      "n": 1811,
+      "roc_auc": 0.7031,
+      "base_rate": 0.2656
+    },
+    "Foot, Hand & Nail Care": {
+      "n": 1169,
+      "roc_auc": 0.7117,
+      "base_rate": 0.2601
+    },
+    "Makeup": {
+      "n": 1058,
+      "roc_auc": 0.7117,
+      "base_rate": 0.2675
+    },
+    "Tools & Accessories": {
+      "n": 902,
+      "roc_auc": 0.7001,
+      "base_rate": 0.245
+    },
+    "Fragrance": {
+      "n": 451,
+      "roc_auc": 0.67,
+      "base_rate": 0.2816
+    },
+    "Shave & Hair Removal": {
+      "n": 615,
+      "roc_auc": 0.7649,
+      "base_rate": 0.2439
+    },
+    "Personal Care": {
+      "n": 463,
+      "roc_auc": 0.6271,
+      "base_rate": 0.2786
+    }
+  }
+}
