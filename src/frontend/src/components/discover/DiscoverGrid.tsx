@@ -39,6 +39,6 @@ export function DiscoverGrid() {
         <div className="product-actions"><Button variant={selected ? "secondary" : "primary"} onClick={() => toggleProduct(item)}>{selected ? <Check/> : <Heart/>}{selected ? "In shortlist" : "Shortlist"}</Button><button aria-label={`Analyze ${product.name}`} title="Analyze product"><Search/></button></div>
       </article>;
     })}</div>
-    {cart.length ? <div className="cart-dock"><div><ShoppingBag/><span><b>{cart.length} product{cart.length === 1 ? "" : "s"}</b><small>{money(total)} / month scenario</small></span></div><Button variant="coral" onClick={() => { createStore(); router.push("/store"); }}>Create my store</Button></div> : null}
+    {cart.length ? <div className="cart-dock"><div><ShoppingBag/><span><b>{cart.length} product{cart.length === 1 ? "" : "s"}</b><small>{money(total)} / month scenario</small></span></div><Button variant="coral" onClick={async () => { await createStore(); router.push("/store"); }}>Create my store</Button></div> : null}
   </>;
 }

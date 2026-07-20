@@ -40,22 +40,22 @@ Never place a Supabase secret/service-role key in this project.
 {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/analyze
 ```
 
-The app implements sign-up, confirmation, sign-in, sign-out, recovery, password update, SSR cookie refresh, and protected dashboard routes. It does not create database tables or RLS policies in this milestone.
+The app implements sign-up, confirmation, sign-in, sign-out, recovery, password update, SSR cookie refresh, protected routes, and authenticated backend proxies. Database tables and RLS policies are versioned in the repository-level `supabase/` directory.
 
 ## FastAPI flow
 
 The browser calls `POST /api/analyses`. This Next.js Route Handler checks the Supabase session, validates the request, and forwards it to `POST {FASTAPI_URL}/v1/analyses`. The browser never needs the FastAPI origin and does not make a cross-origin request.
 
-The current FastAPI service is not itself protected by Supabase JWT validation. The Next.js proxy protects access through Launchly, but direct API hardening remains backend work.
+FastAPI independently verifies the forwarded Supabase JWT and sends the same token to PostgREST, preserving RLS as the final authorization boundary.
 
 ## Data honesty
 
 - **Model:** success, Decision Risk, saturation, price curve, comparables, confidence, uncertainty, and versions.
 - **Formula estimate:** illustrative profit per sale and scenario profit.
-- **Simulation:** trends, audience, review insights, Amazon automation, and local store projections.
+- **Simulation:** trends, audience, review insights, Amazon automation, and demo-catalog Store projections.
 - If `NEXT_PUBLIC_ENABLE_DEMO_MODE=true`, a failed model request uses a deterministic fallback and displays `Demo data`.
 
-My Store is held in user-keyed browser storage. It is not a Supabase-backed portfolio yet.
+My Store and the shortlist are persisted in Supabase. A one-time compatibility migration imports valid user-keyed browser objects and removes the local copy only after a successful remote response.
 
 ## Commands
 

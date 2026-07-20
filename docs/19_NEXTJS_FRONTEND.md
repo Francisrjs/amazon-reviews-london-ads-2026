@@ -4,7 +4,7 @@
 
 `src/frontend/` is the production-structured replacement for `AmazonProject.html`. It owns presentation, Supabase Auth session handling, route protection, validation, deterministic demo state, and a server-side proxy to the existing FastAPI service.
 
-This milestone does not modify FastAPI, model artifacts, Supabase tables, RLS, Google Trends, or Amazon SP-API.
+The frontend now forwards verified Supabase access tokens to FastAPI, submits complete cost inputs, and persists Store state through the authenticated backend. Model artifacts, Google Trends, and Amazon SP-API remain outside this change.
 
 ## Routes
 
@@ -79,8 +79,8 @@ Decision Risk is always presented as an index rather than failure probability. P
 - The FastAPI origin is server-only.
 - Request bodies are validated and whitelisted with Zod.
 - No service-role key belongs in Next.js.
-- Direct FastAPI authentication remains a backend responsibility.
+- FastAPI independently verifies the forwarded JWT before any data operation.
 
 ## Store boundary
 
-The store is a demonstration portfolio saved in browser storage under the authenticated subject ID. It is intentionally labeled local/demo. The proposed persistent schema is documented in [Supabase Auth and database design](20_SUPABASE_AUTH_DATABASE.md).
+The store and shortlist are persisted in Supabase through FastAPI and protected by RLS. Existing user-keyed browser data is imported once; local data is removed only after a valid remote response. Product financials remain labeled as simulations when their source is the demo catalog.

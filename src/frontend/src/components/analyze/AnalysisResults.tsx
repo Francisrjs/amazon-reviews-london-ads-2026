@@ -6,7 +6,7 @@ import type { AnalysisRequest, AnalysisResponse } from "@/lib/api/types";
 import { Badge } from "@/components/shared/Badge";
 import { AudienceChart, ForecastChart, PriceSuccessSimulator } from "./AnalysisCharts";
 
-const money = (value: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+const formatMoney = (value: number, currency: string) => new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
 
 const categoryTopics: Record<string, string[]> = {
   "Hair Care": ["Results and growth", "Scent", "Texture", "Ease of use"],
@@ -21,6 +21,7 @@ const categoryTopics: Record<string, string[]> = {
 
 export function AnalysisResults({ analysis, input }: { analysis: AnalysisResponse; input: AnalysisRequest }) {
   const [expanded, setExpanded] = useState(true);
+  const money = (value: number) => formatMoney(value, input.currency ?? "USD");
   const score = analysis.success.score;
   const estimatedMargin = analysis.profit.per_sale;
   const estimatedUnits = input.expected_units_monthly ?? Math.round(35 + score * 1.45);

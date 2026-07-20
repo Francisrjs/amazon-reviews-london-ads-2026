@@ -4,7 +4,7 @@
 
 This document explains how to prepare, start, verify, and connect the Launchly FastAPI backend to the HTML dashboard.
 
-The current backend is a local development service. It serves the calibrated product-success model and derived outputs, but it does not yet persist analyses in Supabase or provide a production deployment.
+The backend serves the calibrated model and now includes authenticated Supabase persistence, finance formulas, history, and My Store. Production hosting and remote migration deployment remain separate operational steps.
 
 ## 2. Current implementation status
 
@@ -18,13 +18,15 @@ The current backend is a local development service. It serves the calibrated pro
 - Price-versus-score scenarios.
 - Full analysis endpoint consumed by `AmazonProject.html`.
 - Model and dataset version disclosure through `/v1/models/current`.
+- Supabase JWT verification and user-scoped PostgREST access.
+- Transactional analysis persistence, history, Store, and shortlist endpoints.
+- Profit per sale and expected monthly profit with completeness disclosure.
+- Versioned RLS migrations and a Power BI export view.
 
 ### Not implemented or not production-ready
 
-- Profit per sale and expected profit in the real API response.
-- Supabase persistence and analysis history.
-- Power BI export.
-- Authentication, RLS, rate limiting, request IDs, and production observability.
+- Remote migration deployment and production database verification.
+- Rate limiting and production observability infrastructure.
 - Production hosting and HTTPS.
 - Complete validation of frontend loading, error, empty, accessibility, and responsive states.
 

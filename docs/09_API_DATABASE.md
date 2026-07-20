@@ -1,6 +1,6 @@
 # API and database
 
-> **Current implementation status:** The local FastAPI service currently implements `/health`, `/v1/models/current`, `/v1/predict/success`, `/v1/comparables`, `/v1/price-scenarios`, and `/v1/analyses`. The proposed persistence, history, profit, and Supabase behavior in this document are not implemented yet. Use [18_BACKEND_RUNBOOK.md](18_BACKEND_RUNBOOK.md) to run the current service.
+> **Current implementation status:** The modular FastAPI service implements authenticated analysis persistence, history, transparent profit calculations, Store/shortlist persistence, JWT verification, and user-scoped Supabase access. The versioned migrations and RLS policies are in `supabase/`; remote deployment is still an operational step. See [Backend documentation](backend/README.md).
 
 ## 1. Proposed endpoints
 

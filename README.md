@@ -2,7 +2,7 @@
 
 Launchly is a decision-support application for Beauty and Personal Care product ideas. The local environment combines a Next.js frontend, Supabase authentication, and a FastAPI service that serves the product-success model.
 
-> **Current scope:** the Next.js application and Supabase email authentication are implemented. Analyses can be sent to FastAPI through an authenticated Next.js route. Store data is currently browser-local, and several dashboard values remain explicitly labelled as formula-derived or simulated.
+> **Current scope:** Next.js forwards verified Supabase sessions to a modular FastAPI backend. Versioned Supabase migrations implement RLS-protected analysis history, finance results, Store, shortlist, and a Power BI view. Remote migration deployment and production hosting remain operational steps; simulated dashboard sources remain explicitly labelled.
 
 ## Local architecture
 
@@ -21,7 +21,7 @@ flowchart LR
 | FastAPI | `http://127.0.0.1:8000` | Model inference API |
 | FastAPI health | `http://127.0.0.1:8000/health` | Backend readiness check |
 | FastAPI docs | `http://127.0.0.1:8000/docs` | Interactive API documentation |
-| Supabase | Hosted project | Email registration, confirmation, login, and password recovery |
+| Supabase | Hosted project | Auth, RLS-protected application data, analysis history, and Store |
 
 ## Prerequisites
 
@@ -153,7 +153,7 @@ Install the frontend dependencies:
 pnpm.cmd install
 ```
 
-Supabase is currently used for authentication. Application tables and Row Level Security policies described in the architecture documents are planned work, not a completed persistence layer.
+Application tables, RLS policies, RPCs, and the Power BI view are versioned under `supabase/`. Follow [the Supabase runbook](docs/backend/04_SUPABASE_RUNBOOK.md) to validate and deploy them; do not edit the remote schema directly.
 
 ## 4. Run the complete environment
 
@@ -180,7 +180,7 @@ cd src/frontend
 pnpm.cmd dev
 ```
 
-Open `http://localhost:3000`. Register an account, confirm the email if confirmation is enabled, and sign in. An authenticated analysis request is sent to the Next.js `/api/analyses` route, which validates the Supabase session before forwarding the request to FastAPI.
+Open `http://localhost:3000`. Register an account, confirm the email if confirmation is enabled, and sign in. Next.js verifies the Supabase claims and forwards the access token to FastAPI, which independently validates it before inference or persistence.
 
 When `NEXT_PUBLIC_ENABLE_DEMO_MODE=true`, the interface can show deterministic demo results if the model API is unavailable. A demo result does not prove that the FastAPI integration is working; verify the backend health endpoint and terminal logs.
 
@@ -281,7 +281,7 @@ amazon-reviews-london-ads-2026/
 |   |-- api/              FastAPI model service
 |   |-- frontend/         Next.js application and Supabase Auth integration
 |   `-- ml/               Training, calibration, and validation pipelines
-|-- supabase/             Supabase database definitions and future migrations
+|-- supabase/             Versioned migrations, RLS, RPCs, seeds, and pgTAP tests
 |-- tests/                Python model and formula tests
 `-- README.md             Complete local setup guide
 ```
@@ -294,7 +294,8 @@ amazon-reviews-london-ads-2026/
 | [Master PRD](docs/01_PRD_MASTER.md) | Product vision, scope, and constraints |
 | [HTML MVP mapping](docs/04_HTML_MVP_MAPPING.md) | Prototype-to-application mapping |
 | [Architecture and hosting](docs/08_ARCHITECTURE_HOSTING.md) | Target architecture and deployment model |
-| [API and database](docs/09_API_DATABASE.md) | API contracts and proposed Supabase schema |
+| [API and database](docs/09_API_DATABASE.md) | API contracts and implemented Supabase schema |
+| [Backend implementation](docs/backend/README.md) | Architecture, RLS, API, migrations, and operations |
 | [Definition of Done](docs/14_DEFINITION_OF_DONE.md) | MVP completion criteria |
 | [Backend runbook](docs/18_BACKEND_RUNBOOK.md) | FastAPI setup, artifacts, and operations |
 | [Next.js frontend](docs/19_NEXTJS_FRONTEND.md) | Frontend architecture and behavior |

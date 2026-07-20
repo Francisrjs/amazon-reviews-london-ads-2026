@@ -7,8 +7,8 @@ export interface AnalysisRequest {
   title: string;
   description: string;
   price: number;
-  market: string;
-  currency: string;
+  market?: string;
+  currency?: string;
   unit_cost?: number;
   fulfilment_cost?: number;
   marketplace_fee_pct?: number;

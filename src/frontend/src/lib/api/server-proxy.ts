@@ -35,6 +35,7 @@ export async function authenticatedBackendRequest(path: string, init: RequestIni
 export async function proxyBackendJson(path: string, init: RequestInit = {}) {
   try {
     const response = await authenticatedBackendRequest(path, init);
+    if (response.status === 204) return new Response(null, { status: 204 });
     const body = await response.json().catch(() => null);
     return Response.json(body, { status: response.status });
   } catch (error) {

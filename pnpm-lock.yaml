@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       supabase:
-        specifier: ^2.39.2
+        specifier: 2.109.1
         version: 2.109.1
 
   src/frontend:

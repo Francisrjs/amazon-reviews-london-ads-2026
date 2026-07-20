@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+const workspaceRoot = path.resolve(projectRoot, "../..");
 
 // Keep Turbopack/PostCSS child processes on the same Node runtime as Next.js.
 // This avoids Windows launchers resolving an older global Node installation.
@@ -16,7 +17,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  turbopack: { root: projectRoot },
+  turbopack: { root: workspaceRoot },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },

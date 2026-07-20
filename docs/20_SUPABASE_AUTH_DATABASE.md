@@ -1,8 +1,8 @@
-# Supabase Auth and proposed database design
+# Supabase Auth and database design
 
 ## Current implementation
 
-The Next.js application uses Supabase Auth only. It does not call the Supabase Data API and does not create application tables in this milestone.
+The Next.js application uses Supabase Auth and forwards verified access tokens to FastAPI. FastAPI calls the Supabase Data API with the same user token, so the implemented tables and RLS policies remain authoritative. See [Backend documentation](backend/README.md) and the versioned migration in `supabase/migrations/`.
 
 ### Auth endpoint map
 
