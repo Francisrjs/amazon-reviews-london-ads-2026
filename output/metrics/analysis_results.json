@@ -1,0 +1,410 @@
+{
+  "dataset": {
+    "rows": 46435,
+    "subcategory_counts": {
+      "Hair Care": 14062,
+      "Skin Care": 9225,
+      "Foot, Hand & Nail Care": 5800,
+      "Makeup": 5039,
+      "Tools & Accessories": 4497,
+      "Shave & Hair Removal": 3175,
+      "Fragrance": 2369,
+      "Personal Care": 2268
+    },
+    "price_null_rate": 0.0
+  },
+  "part_I": {
+    "descriptive": {
+      "average_rating": {
+        "n": 46435,
+        "mean": 4.36214708732637,
+        "median": 4.4,
+        "std": 0.30959084353941235,
+        "var": 0.0958464904034449,
+        "min": 1.7000000000000002,
+        "max": 5.0,
+        "Q1": 4.2,
+        "Q3": 4.6,
+        "IQR": 0.39999999999999947,
+        "cv": 0.07097212389717136,
+        "skewness": -1.4358743546580202,
+        "kurtosis_excess": 3.5581229111784385,
+        "p60": 4.5
+      },
+      "rating_number": {
+        "n": 46435,
+        "mean": 2366.3248842467965,
+        "median": 876.0,
+        "std": 6018.872494294203,
+        "var": 36226826.102571316,
+        "min": 1,
+        "max": 340182,
+        "Q1": 422.0,
+        "Q3": 2041.5,
+        "IQR": 1619.5,
+        "cv": 2.5435528884318925,
+        "skewness": 14.855561581849457,
+        "kurtosis_excess": 516.9702351615847,
+        "p60": 1185.0
+      },
+      "price": {
+        "n": 46435,
+        "mean": 24.01803940992786,
+        "median": 15.99,
+        "std": 31.213463429309996,
+        "var": 974.2802992528725,
+        "min": 0.01,
+        "max": 2398.91,
+        "Q1": 9.96,
+        "Q3": 26.21,
+        "IQR": 16.25,
+        "cv": 1.2995841540841135,
+        "skewness": 14.090925963125457,
+        "kurtosis_excess": 761.8623257435412,
+        "p60": 19.35
+      }
+    },
+    "outliers": {
+      "rating_number": {
+        "tukey_1.5": 5328,
+        "tukey_3.0": 3185,
+        "zscore_3": 679,
+        "mad_3.5": 6194
+      },
+      "price": {
+        "tukey_1.5": 3798,
+        "tukey_3.0": 2077,
+        "zscore_3": 817,
+        "mad_3.5": 3661
+      }
+    },
+    "log1p_skew": {
+      "rating_number": {
+        "raw_skew": 14.855561581849457,
+        "log1p_skew": 0.11058081085222567
+      },
+      "price": {
+        "raw_skew": 14.090925963125457,
+        "log1p_skew": 0.7534681535814508
+      }
+    },
+    "missing_rate": {
+      "title": 2.153547970281038e-05,
+      "average_rating": 0.0,
+      "rating_number": 0.0,
+      "price": 0.0,
+      "features_text": 0.0,
+      "desc_text": 0.0
+    }
+  },
+  "part_II": {
+    "correlations": {
+      "price~rating": {
+        "pearson_r": 0.012976446447465049,
+        "pearson_p": 0.005169001981895045,
+        "spearman_rho": 0.07012393957533263,
+        "spearman_p": 1.0415127563205156e-51
+      },
+      "price~log_volume": {
+        "pearson_r": -0.09616126386403546,
+        "pearson_p": 8.227361575796288e-96,
+        "spearman_rho": -0.13372953830867257,
+        "spearman_p": 3.114076665992914e-184
+      },
+      "rating~log_volume": {
+        "pearson_r": 0.19113419022064526,
+        "pearson_p": 0.0,
+        "spearman_rho": 0.18474171003256795,
+        "spearman_p": 0.0
+      },
+      "review_count~rating_number": {
+        "pearson_r": 0.6988397881380255,
+        "pearson_p": 0.0,
+        "spearman_rho": 0.6505472233070534,
+        "spearman_p": 0.0
+      }
+    },
+    "normality": {
+      "average_rating": {
+        "statistic": 1350.913416313226,
+        "p": 4.496544368371454e-294,
+        "is_normal": false
+      },
+      "rating_number": {
+        "statistic": 7274.011684151491,
+        "p": 0.0,
+        "is_normal": false
+      },
+      "price": {
+        "statistic": 5218.258346668874,
+        "p": 0.0,
+        "is_normal": false
+      }
+    }
+  },
+  "part_III": {
+    "thresholds": {
+      "median_rating": {
+        "Foot, Hand & Nail Care": 4.4,
+        "Fragrance": 4.5,
+        "Hair Care": 4.4,
+        "Makeup": 4.3,
+        "Personal Care": 4.4,
+        "Shave & Hair Removal": 4.4,
+        "Skin Care": 4.5,
+        "Tools & Accessories": 4.5
+      },
+      "p60_log_volume": {
+        "Foot, Hand & Nail Care": 7.1357,
+        "Fragrance": 7.0421,
+        "Hair Care": 7.0817,
+        "Makeup": 7.0577,
+        "Personal Care": 6.9904,
+        "Shave & Hair Removal": 7.146,
+        "Skin Care": 7.0089,
+        "Tools & Accessories": 7.1559
+      },
+      "median_price": {
+        "Foot, Hand & Nail Care": 10.27,
+        "Fragrance": 29.89,
+        "Hair Care": 16.99,
+        "Makeup": 12.99,
+        "Personal Care": 14.815,
+        "Shave & Hair Removal": 17.99,
+        "Skin Care": 18.0,
+        "Tools & Accessories": 11.99
+      },
+      "p25_price": {
+        "Foot, Hand & Nail Care": 7.99,
+        "Fragrance": 19.5,
+        "Hair Care": 9.99,
+        "Makeup": 8.285,
+        "Personal Care": 9.97,
+        "Shave & Hair Removal": 11.415,
+        "Skin Care": 11.97,
+        "Tools & Accessories": 8.29
+      },
+      "p75_price": {
+        "Foot, Hand & Nail Care": 18.0,
+        "Fragrance": 60.0,
+        "Hair Care": 29.95,
+        "Makeup": 21.0,
+        "Personal Care": 21.0,
+        "Shave & Hair Removal": 29.95,
+        "Skin Care": 28.0,
+        "Tools & Accessories": 19.99
+      },
+      "iqr_price": {
+        "Foot, Hand & Nail Care": 10.01,
+        "Fragrance": 40.5,
+        "Hair Care": 19.96,
+        "Makeup": 12.715,
+        "Personal Care": 11.03,
+        "Shave & Hair Removal": 18.535,
+        "Skin Care": 16.03,
+        "Tools & Accessories": 11.7
+      }
+    },
+    "class_balance": {
+      "positive_rate": 0.2608377301604393,
+      "counts": {
+        "0": 34323,
+        "1": 12112
+      },
+      "imbalance_ratio": 2.833801188903567
+    },
+    "sensitivity": {
+      "p50/p60(base)": {
+        "positive_rate": 0.2608377301604393,
+        "flip_vs_base": 0.0
+      },
+      "p50/p50": {
+        "positive_rate": 0.3214385700441477,
+        "flip_vs_base": 0.06060083988370841
+      },
+      "p50/p75": {
+        "positive_rate": 0.16851512867449123,
+        "flip_vs_base": 0.0923226014859481
+      },
+      "p60/p60": {
+        "positive_rate": 0.212038333153871,
+        "flip_vs_base": 0.048799397006568324
+      }
+    },
+    "group_compare": {
+      "price": {
+        "welch_t": -15.743808704872857,
+        "welch_p": 1.2491495816205117e-55,
+        "cohens_d": -0.14012370062664725,
+        "mannwhitney_U": 187631949.0,
+        "mannwhitney_p": 2.8441595499085697e-57,
+        "rank_biserial": 0.09731612833724967
+      },
+      "rating_number": {
+        "welch_t": 47.09563105319256,
+        "welch_p": 0.0,
+        "cohens_d": 0.75296294725255,
+        "mannwhitney_U": 379763027.0,
+        "mannwhitney_p": 0.0,
+        "rank_biserial": -0.8270127307941868
+      },
+      "average_rating": {
+        "welch_t": 135.8499658388247,
+        "welch_p": 0.0,
+        "cohens_d": 0.9814439447347201,
+        "mannwhitney_U": 329295535.5,
+        "mannwhitney_p": 0.0,
+        "rank_biserial": -0.5842172428022834
+      }
+    },
+    "subcat_assoc": {
+      "chi2": 72.12459480925844,
+      "p": 5.491557376341339e-13,
+      "dof": 7,
+      "cramers_v": 0.0394111373546642
+    }
+  },
+  "part_IV": {
+    "n_features": 316,
+    "num_cols": [
+      "price_fit",
+      "price_is_missing",
+      "has_brand",
+      "has_item_form",
+      "has_color",
+      "has_scent",
+      "has_skin_type",
+      "has_hair_type"
+    ],
+    "tfidf_terms": 300
+  },
+  "part_V_VI": {
+    "report_oof": {
+      "confusion": {
+        "TN": 31105,
+        "FP": 3218,
+        "FN": 8503,
+        "TP": 3609
+      },
+      "accuracy": 0.7475826424033596,
+      "precision": 0.5286362970558078,
+      "recall": 0.2979689564068692,
+      "f1": 0.38111832726120703,
+      "roc_auc": 0.7151085192939973,
+      "pr_auc": 0.47172995880475466,
+      "brier": 0.18619399812543094,
+      "log_loss": 0.5550459468684139
+    },
+    "ece_uncalibrated": 0.11871921792929728,
+    "leakage_audit": {
+      "note": "CV sin fuga: TF-IDF y price_fit ajustados SOLO en train por fold. El target se mantiene como definición poblacional fija (no es feature).",
+      "leaky_full_fit": {
+        "accuracy": 0.7476,
+        "precision": 0.5286,
+        "recall": 0.298,
+        "f1": 0.3811,
+        "roc_auc": 0.7151,
+        "pr_auc": 0.4717,
+        "brier": 0.1862,
+        "ece_uncal": 0.1187,
+        "ece_isotonic": 0.0029
+      },
+      "leakfree_infold": {
+        "accuracy": 0.7484,
+        "precision": 0.5317,
+        "recall": 0.2975,
+        "f1": 0.3815,
+        "roc_auc": 0.7149,
+        "pr_auc": 0.4713,
+        "brier": 0.1862,
+        "ece_uncal": 0.1188,
+        "ece_isotonic": 0.0017
+      },
+      "delta_roc_auc": -0.0002,
+      "delta_pr_auc": -0.0004
+    }
+  },
+  "part_VII": {
+    "mdi_top20": {
+      "price_fit": 0.03842,
+      "tfidf::natural": 0.01347,
+      "tfidf::oz": 0.01315,
+      "tfidf::hair": 0.01273,
+      "tfidf::skin": 0.01235,
+      "tfidf::use": 0.01166,
+      "tfidf::free": 0.01088,
+      "tfidf::easy": 0.00927,
+      "tfidf::pack": 0.00913,
+      "tfidf::dry": 0.00852,
+      "tfidf::perfect": 0.00831,
+      "tfidf::women": 0.00786,
+      "tfidf::oil": 0.00777,
+      "tfidf::color": 0.00768,
+      "tfidf::long": 0.00763,
+      "tfidf::quality": 0.00748,
+      "tfidf::care": 0.00743,
+      "tfidf::human": 0.00701,
+      "tfidf::ounce": 0.00696,
+      "tfidf::face": 0.00673
+    },
+    "permutation_top20": {
+      "price_fit": 0.022305,
+      "has_scent": 0.008656,
+      "tfidf::natural": 0.005783,
+      "tfidf::oz": 0.003723,
+      "tfidf::pack": 0.003626,
+      "tfidf::skin": 0.002853,
+      "tfidf::hair": 0.002386,
+      "tfidf::color": 0.001878,
+      "tfidf::care": 0.001829,
+      "tfidf::dry": 0.001593,
+      "tfidf::men": 0.00152,
+      "has_color": 0.00146,
+      "tfidf::use": 0.001313,
+      "tfidf::human": 0.001284,
+      "tfidf::easy": 0.001231,
+      "tfidf::women": 0.001194,
+      "tfidf::human hair": 0.001153,
+      "tfidf::professional": 0.001136,
+      "tfidf::makeup": 0.001098,
+      "tfidf::face": 0.001015
+    },
+    "honest_calibration_oof": {
+      "uncalibrated": {
+        "ece": 0.11871921792929728,
+        "brier": 0.18619399812543094
+      },
+      "isotonic_oof": {
+        "ece": 0.0029035171797255526,
+        "brier": 0.1704460263308125
+      },
+      "platt_sigmoid_oof": {
+        "ece": 0.004295336396901679,
+        "brier": 0.170330413714579
+      },
+      "best_method": "isotonic_oof"
+    },
+    "shap_status": "OMITIDO localmente: incompatibilidad numerica shap 0.50 + sklearn 1.7 (additivity check falla, valores ~1e14). El codigo esta en metrics.py.shap_values para correr en Google Colab, como indican los MD (Parte VII: correr SHAP en Colab, no en la app). Interpretabilidad local cubierta con importancia por permutacion (metodo preferido por los docs)."
+  },
+  "part_VIII": {
+    "rf_uncertainty_mean": 0.2972139877778516,
+    "example_product": {
+      "title": "REVLON One-Step Volumizer Original 1.0 Hair Dryer and Hot Air Brush, Black",
+      "score": 82,
+      "saturation": 95.02583979328165,
+      "risk": 43,
+      "comparables_success": "4/5",
+      "wilson_ci": [
+        0.3755282641185388,
+        0.9637768390302125
+      ],
+      "best_price_fit": 1.25
+    },
+    "score_distribution": {
+      "mean": 27.735879004041408,
+      "median": 19.942505823946945,
+      "p10": 8.51853372048748,
+      "p90": 60.84460741633737
+    }
+  }
+}

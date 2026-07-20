@@ -907,6 +907,80 @@ function miniForecastSvg(series, forecast){
   </svg>`;
 }
 
+// ===================== REAL MODEL API =====================
+// Conecta la página al backend FastAPI (REPO/src/api). Si el backend no está
+// disponible, cae limpiamente al cálculo demo (computeAnalysis) con etiqueta visible.
+const MODEL_API = {
+  base: (typeof localStorage !== 'undefined' && localStorage.getItem('MODEL_API_BASE')) || 'http://127.0.0.1:8000',
+  on: !(typeof localStorage !== 'undefined' && localStorage.getItem('MODEL_API_OFF') === '1'),
+};
+
+async function fetchModelAnalysis(subLabel, title, price, desc, riskKey){
+  const res = await fetch(MODEL_API.base + '/v1/analyses', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, cache: 'no-store',
+    body: JSON.stringify({ subcategory: subLabel, title: title || '', description: desc || '',
+                           price: price, risk_preference: riskKey || 'balanced' }),
+  });
+  if (!res.ok) throw new Error('API ' + res.status);
+  return res.json();
+}
+
+// Fusiona los números REALES del modelo dentro del objeto `result` del mock.
+// Devuelve 'model' si se aplicó, 'demo' si hubo fallback. Solo pisa métricas
+// de Nivel A (modelo): success, risk, saturación, comparables, curva y rango.
+async function applyModel(result, categoryKey, price, desc){
+  if (!MODEL_API.on) return 'demo';
+  const cat = CATEGORIES[categoryKey];
+  try{
+    const a = await fetchModelAnalysis(cat.label, desc, price, desc, selectedRisk);
+    result.successPct = a.success.score;
+    result.tier = tierOf(a.success.score);
+    result.decisionRisk = a.risk.index;
+    result.saturation = Math.round(a.saturation.value);
+    if (Array.isArray(a.price_range) && a.price_range[0] != null){
+      result.suggestMin = Math.round(a.price_range[0]);
+      result.suggestMax = Math.round(a.price_range[1]);
+    }
+    if (a.comparables && a.comparables.length){
+      result.products = a.comparables.slice(0, 3).map(c => ({
+        name: c.title, price: Math.round(c.price || 0),
+        rating: (c.rating || 0).toFixed(1), reviews: c.reviews || 0 }));
+    }
+    if (a.price_curve && a.price_curve.length){
+      result.curve = a.price_curve.map(pt => {
+        const m = moneyFor(cat, pt.price, pt.score);
+        const risk = Math.max(3, Math.min(96, Math.round(0.55 * (100 - pt.score) + 0.45 * result.saturation)));
+        return { price: pt.price, score: pt.score, monthly: m.monthly, risk };
+      });
+      result.curveMin = result.curve[0].price;
+      result.curveMax = result.curve[result.curve.length - 1].price;
+      result.bestPoint = result.curve.reduce((x, y) => y.monthly > x.monthly ? y : x, result.curve[0]);
+      result.bestSuccess = result.curve.reduce((x, y) => y.score > x.score ? y : x, result.curve[0]);
+    }
+    result.money = moneyFor(cat, price, a.success.score);   // titular de $ desde el score real
+    result.modelMeta = { version: a.model_version, confidence: a.success.confidence,
+                         uncertainty: a.success.uncertainty, wilson: a.comparables_success,
+                         limitations: a.limitations };
+    return 'model';
+  } catch(e){
+    console.warn('[model] backend no disponible, usando demo:', e.message);
+    return 'demo';
+  }
+}
+
+function setSourceBadge(kind){
+  let b = document.getElementById('modelSourceBadge');
+  if (!b){
+    b = document.createElement('div'); b.id = 'modelSourceBadge';
+    b.title = 'Origen de los números del análisis';
+    b.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:9999;font:800 12px/1 system-ui;'
+      + 'padding:8px 13px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.18);cursor:default;';
+    document.body.appendChild(b);
+  }
+  if (kind === 'model'){ b.textContent = '● Live model'; b.style.background = '#0F9E74'; b.style.color = '#fff'; }
+  else { b.textContent = '◐ Demo data'; b.style.background = '#FFB833'; b.style.color = '#3a2a00'; }
+}
+
 // ===================== CORE ANALYSIS =====================
 function computeAnalysis(categoryKey, price, desc, riskKey){
   const cat = CATEGORIES[categoryKey];
@@ -1009,7 +1083,7 @@ async function renderTrendsTab(force){
   const live = cats.some(c => c.t.live);
   const src = document.getElementById('trendsSource');
   src.className = 'source-tag ' + (live ? 'live' : 'sim');
-  src.textContent = live ? '● live Google Trends' : 'simulated for now';
+  src.textContent = live ? '● live Google Trends' : 'simulated for now  ';
 
   const top = cats[0];
   const verdict = top.t.direction === 'up' ? 'Rising fast, a great time to launch here.' : top.t.direction === 'down' ? 'Cooling off, move quickly or find a fresher angle.' : 'Steady and reliable, not a fad.';
@@ -1109,6 +1183,8 @@ function runAnalyze(){
   setTimeout(async () => {
     clearInterval(iv);
     const result = computeAnalysis(categoryKey, price, desc, selectedRisk);
+    const source = await applyModel(result, categoryKey, price, desc);
+    setSourceBadge(source);
     renderResults(result, price, desc);
     await renderForecast(result);
     loadingState.style.display = 'none'; resultsContent.classList.add('show'); analyzeBtn.disabled = false;
