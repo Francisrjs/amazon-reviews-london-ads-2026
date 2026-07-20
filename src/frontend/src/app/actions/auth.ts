@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl } from "@/lib/site-url";
 
 export interface AuthState { error?: string; message?: string }
 
@@ -33,7 +34,7 @@ export async function register(_: AuthState, formData: FormData): Promise<AuthSt
   if (password !== confirm) return { error: "The passwords do not match." };
   try {
     const supabase = await createClient();
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const siteUrl = getSiteUrl();
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -51,7 +52,7 @@ export async function requestReset(_: AuthState, formData: FormData): Promise<Au
   if (!/^\S+@\S+\.\S+$/.test(email)) return { error: "Enter a valid email address." };
   try {
     const supabase = await createClient();
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const siteUrl = getSiteUrl();
     await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${siteUrl}/reset-password` });
     return { message: "If that email is registered, a reset link is on its way." };
   } catch (error) {

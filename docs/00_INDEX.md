@@ -21,6 +21,7 @@
 17. [Backend implementation documentation](backend/README.md)
 18. [Next.js frontend architecture](19_NEXTJS_FRONTEND.md)
 19. [Supabase Auth and database design](20_SUPABASE_AUTH_DATABASE.md)
+20. [Vercel Next.js and FastAPI deployment plan](plans/VERCEL_NEXTJS_FASTAPI_DEPLOYMENT_PLAN.md)
 
 ## How to read this repository
 
