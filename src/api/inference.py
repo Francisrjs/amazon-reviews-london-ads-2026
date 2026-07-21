@@ -22,7 +22,6 @@ ROOT = Path(__file__).resolve().parents[2]
 MODELS = ROOT / "output" / "models"
 PRED = ROOT / "output" / "predictions"
 METRICS = ROOT / "output" / "metrics"
-
 REAL_SUBCATS = [
     "Hair Care", "Skin Care", "Foot, Hand & Nail Care", "Makeup",
     "Tools & Accessories", "Fragrance", "Shave & Hair Removal", "Personal Care",
@@ -51,6 +50,12 @@ class Artifacts:
             self.metrics = json.loads((METRICS / "analysis_results.json").read_text())
         except FileNotFoundError:
             self.metrics = {}
+        try:
+            self.review_topics = json.loads((MODELS / "review_topics.json").read_text())
+        except FileNotFoundError:
+            # topic_extraction.py (Parte IX) todavía no corrió — normal hasta que
+            # Dataset C (reviews_nlp_subset) esté descargado, ver docs/PROJECT_CONTEXT.md.
+            self.review_topics = {}
         assert len(self.feature_names) == 316, "feature_names inesperado"
 
     # ---------- construcción del vector ----------
@@ -116,6 +121,16 @@ class Artifacts:
             curve.append({"price": round(float(p), 2), "score": int(round(100 * p_cal))})
         return curve
 
+    def topics(self, subcat: str) -> dict | None:
+        """Sentiment/topics/keywords reales para 'What customers talk about'.
+
+        Devuelve None si Parte IX (topic_extraction.py) no corrió todavía para
+        esta subcategoría — el caller (analyze()) debe tratar eso como
+        'sin dato del modelo' y dejar que el frontend caiga al fallback
+        estático (categoryTopics en AnalysisResults.tsx), no como error.
+        """
+        return self.review_topics.get(subcat)
+
 
 def _num(x):
     try:
@@ -171,6 +186,18 @@ def analyze(subcategory: str, title: str, description: str, price: float,
     p25 = A.stats["p25_price"].get(subcategory)
     p75 = A.stats["p75_price"].get(subcategory)
 
+    topics_payload = A.topics(subcategory)
+    limitations = [
+        "El 'éxito' es un proxy (rating+volumen), no ventas reales.",
+        "Señal modesta: ROC-AUC ~0.71. Los scores son probabilidades con incertidumbre.",
+        "Beneficio/forecast/demografía no salen del modelo (capa de supuestos/externa).",
+    ]
+    if topics_payload is None:
+        limitations.append(
+            "Los 'topics' de reviews todavía no salen de texto real (Dataset C "
+            "no descargado); se muestra un escenario fijo por categoría en el frontend."
+        )
+
     confidence = "high" if unc < 0.20 else "medium" if unc < 0.30 else "low"
     return {
         "success": {"score": score, "probability": round(p_cal, 4),
@@ -188,11 +215,8 @@ def analyze(subcategory: str, title: str, description: str, price: float,
         "comparables": comps,
         "comparables_success": {"successes": succ_comp, "n": len(comps),
                                 "wilson_ci_95": [wlo, whi]},
+        "topics": topics_payload,
         "model_version": MODEL_VERSION,
         "dataset_version": DATASET_VERSION,
-        "limitations": [
-            "El 'éxito' es un proxy (rating+volumen), no ventas reales.",
-            "Señal modesta: ROC-AUC ~0.71. Los scores son probabilidades con incertidumbre.",
-            "Beneficio/forecast/demografía no salen del modelo (capa de supuestos/externa).",
-        ],
+        "limitations": limitations,
     }
