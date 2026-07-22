@@ -7,12 +7,13 @@ export function useProducts(limit = 10) {
     useEffect(() => {
         async function fetchProducts() {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/v1/datasets/products?skip=0&limit=${limit}`);
+                // Apunta a la API route de Next.js en lugar de 127.0.0.1
+                const response = await fetch(`/api/datasets/products?skip=0&limit=${limit}`);
                 const data = await response.json();
                 
-                setProducts(data.items);
+                setProducts(data.items ?? []);
             } catch (error) {
-                console.error("Failed to lad products from the database:", error);
+                console.error("Failed to load products from the database:", error);
             } finally {
                 setLoading(false);
             }
