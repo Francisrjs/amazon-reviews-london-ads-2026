@@ -43,7 +43,7 @@ export function AnalysisForm({ onSubmit, busy }: { onSubmit: (value: AnalysisReq
     <label className="field"><span>Expected units / month</span><input type="number" step="1" {...register("expected_units_monthly", optionalNumber)}/></label>
     <label className="field"><span>Describe the product</span><textarea maxLength={500} {...register("description")} /><small className="char-count">{description.length}/500</small>{errors.description ? <small className="field-error">{errors.description.message}</small> : null}</label>
     <fieldset className="risk-field"><legend>How bold do you feel?</legend><div className="risk-options">
-      {[{ value: "cautious", emoji: "🐢", label: "Cautious" }, { value: "balanced", emoji: "⚖️", label: "Balanced" }, { value: "bold", emoji: "🚀", label: "Bold" }].map((option) => <label key={option.value}><input type="radio" value={option.value} {...register("risk_preference")} /><span><b>{option.emoji}</b>{option.label}</span></label>)}
+      {[{ value: "cautious", label: "Cautious" }, { value: "balanced", label: "Balanced" }, { value: "bold", label: "Bold" }].map((option) => <label key={option.value}><input type="radio" value={option.value} {...register("risk_preference")} /><span>{option.label}</span></label>)}
     </div></fieldset>
     <Button disabled={busy} className="analyze-submit"><Sparkles />{busy ? "Reading the market…" : "Show me the money"}</Button>
     <button className="sample-button" type="button" onClick={() => reset(sample)}>No idea yet? Load the vitamin C example.</button>

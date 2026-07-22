@@ -80,8 +80,8 @@ export function AnalyzeWorkspace() {
   return <>
     <div className="page-intro">
       <span className="eyebrow">Product decision console</span>
-      <h1>Got a beauty product idea? See <em>how strong the evidence is.</em></h1>
-      <p>Compare the idea with historical product patterns, inspect the risk, and find a price worth testing.</p>
+      <h1>Got a beauty product idea? See <em>how much it could make.</em></h1>
+      <p>Tell us what you would sell and at what price. In seconds, <b>Priori</b> shows your estimated <b>monthly profit</b>, your odds of success, and where demand is heading next.</p>
       
       <div className="mt-6">
         {isClient && (
@@ -90,7 +90,7 @@ export function AnalyzeWorkspace() {
             disabled={busy || loadingProducts || products.length === 0}
             className="px-5 py-2.5 bg-violet-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {loadingProducts ? "Connecting to local database..." : "🔮 Autocomplete product..."}
+            {loadingProducts ? "Connecting to local database..." : "Autocomplete product..."}
           </button>
         )}
       </div>

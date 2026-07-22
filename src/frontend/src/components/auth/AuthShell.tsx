@@ -1,10 +1,11 @@
-import { Rocket, ShieldCheck, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles } from "lucide-react";
+import { PrioriMark } from "@/components/shared/PrioriMark";
 
 export function AuthShell({ eyebrow, title, description, children }: { eyebrow: string; title: string; description: string; children: React.ReactNode }) {
   return (
     <main className="auth-page">
-      <section className="auth-story" aria-label="Launchly introduction">
-        <div className="brand-lockup"><span className="brand-mark"><Rocket /></span><span><b>Launchly</b><small>beauty launch co-pilot</small></span></div>
+      <section className="auth-story" aria-label="Priori introduction">
+        <div className="brand-lockup"><span className="brand-mark"><PrioriMark /></span><span><b>Priori</b><small>Know before you launch</small></span></div>
         <div className="auth-story-copy">
           <span className="eyebrow light">{eyebrow}</span>
           <h1>See the money<br />before you launch.</h1>

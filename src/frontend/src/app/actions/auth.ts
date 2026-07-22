@@ -69,7 +69,7 @@ export async function updatePassword(_: AuthState, formData: FormData): Promise<
     const supabase = await createClient();
     const { error } = await supabase.auth.updateUser({ password });
     if (error) return { error: "The reset link is invalid or expired. Request a new one." };
-    return { message: "Password updated. You can continue to Launchly." };
+    return { message: "Password updated. You can continue to Priori." };
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Password update is unavailable." };
   }
