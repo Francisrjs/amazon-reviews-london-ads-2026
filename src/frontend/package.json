@@ -13,6 +13,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.112.5",
     "@fontsource-variable/fredoka": "^5.2.8",
     "@fontsource-variable/nunito": "^5.2.8",
     "@google/genai": "^2.13.0",
