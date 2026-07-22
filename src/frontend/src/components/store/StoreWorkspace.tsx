@@ -89,7 +89,7 @@ export function StoreWorkspace() {
     <div className="store-empty">
       <span className="state-icon"><Store/></span>
       <h1>You have not built a store yet</h1>
-      <p>Shortlist products in Discover or let Launchly assemble a balanced demo portfolio.</p>
+      <p>Shortlist products in Discover or let Priori assemble a balanced demo portfolio.</p>
       <div>
         <Button variant="coral" onClick={() => router.push("/discover")}>
           <PackagePlus/>Browse trending

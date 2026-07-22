@@ -64,7 +64,7 @@ export function AnalysisResults({ analysis, input }: { analysis: AnalysisRespons
 
     <PriceSuccessSimulator key={`${input.subcategory}-${input.price}-${analysis.model_version}`} data={analysis.price_curve} currentPrice={input.price} saturation={saturation}/>
 
-    <div className="reason-list"><div className="section-title"><Info/> Why Launchly is saying this</div><article className="reason-positive">✓ Your price sits {input.price >= (sweetRange[0] ?? 0) && input.price <= (sweetRange[1] ?? Infinity) ? "inside" : "outside"} the category&apos;s supported range.</article><article className="reason-neutral">○ Similarity and saturation are comparative market signals, not market-share estimates.</article><article className="reason-negative">! The model has moderate predictive signal; use the score to plan a test, not to guarantee sales.</article></div>
+    <div className="reason-list"><div className="section-title"><Info/> Why Priori is saying this</div><article className="reason-positive">✓ Your price sits {input.price >= (sweetRange[0] ?? 0) && input.price <= (sweetRange[1] ?? Infinity) ? "inside" : "outside"} the category&apos;s supported range.</article><article className="reason-neutral">○ Similarity and saturation are comparative market signals, not market-share estimates.</article><article className="reason-negative">! The model has moderate predictive signal; use the score to plan a test, not to guarantee sales.</article></div>
     <button className="breakdown-toggle" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded}><span>{expanded ? "Hide the full breakdown" : "See the full breakdown"}</span><ChevronDown className={expanded ? "rotated" : ""}/></button>
 
     {expanded ? <div className="breakdown">
