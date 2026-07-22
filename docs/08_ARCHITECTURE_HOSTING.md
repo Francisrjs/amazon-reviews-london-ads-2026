@@ -14,6 +14,8 @@
 | Frontend hosting | Vercel or equivalent | Next.js deployment |
 | API hosting | Cloud Run, Render, Railway, or another container host | Python service with controlled memory use |
 
+The implementation-ready deployment procedure, environment-variable contract, Vercel CLI commands, Supabase redirect configuration, and current free FastAPI hosting alternatives are documented in the [Vercel Next.js and FastAPI deployment plan](plans/VERCEL_NEXTJS_FASTAPI_DEPLOYMENT_PLAN.md).
+
 ## 2. Supabase must not store the entire data lake
 
 Supabase should store:

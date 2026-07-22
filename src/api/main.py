@@ -1,19 +1,5 @@
-"""
-main.py — FastAPI que expone el modelo real al dashboard (Launchly / AmazonProject.html).
+"""Compatibility entrypoint for ``uvicorn main:app`` from ``src/api``."""
 
-Endpoints (contrato de docs/09_API_DATABASE.md, P0):
-    GET  /health                  liveness
-    GET  /v1/models/current       versión del modelo + métricas de validación
-    POST /v1/predict/success      score calibrado + incertidumbre
-    POST /v1/comparables          k-NN + saturación
-    POST /v1/price-scenarios      curva de precio (barrido)
-    POST /v1/analyses             análisis completo (lo que consume la página)
-
-Ejecutar:
-    cd REPO/src/api
-    uvicorn main:app --reload --port 8000
-Docs interactivas: http://localhost:8000/docs
-"""
 from __future__ import annotations
 
 from typing import Optional
@@ -67,7 +53,7 @@ class ProductInput(BaseModel):
 
 @app.on_event("startup")
 def _warm():
-    I.get_artifacts()          # carga los artefactos una sola vez
+    I.get_artifacts()           # carga los artefactos una sola vez
 
 
 def _guard_subcat(subcat: str):
@@ -105,7 +91,7 @@ def models_current():
         "cv_metrics": m.get("report_oof", {}),
         "calibration": A.metrics.get("part_VII", {}).get("honest_calibration_oof", {}),
         "validation": {k: val.get(k) for k in ("T1_holdout", "T3_label_permutation",
-                                               "T4_stability") if k in val},
+                                              "T4_stability") if k in val},
     }
 
 

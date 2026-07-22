@@ -1,10 +1,12 @@
 # API and database
 
+> **Current implementation status:** The modular FastAPI service implements authenticated analysis persistence, history, transparent profit calculations, Store/shortlist persistence, JWT verification, and user-scoped Supabase access. The versioned migrations and RLS policies are in `supabase/`; remote deployment is still an operational step. See [Backend documentation](backend/README.md).
+
 ## 1. Proposed endpoints
 
 | Method | Endpoint | Priority | Function |
 |---|---|---:|---|
-| POST | `/v1/analyses` | P0 | Run the full analysis and persist it |
+| POST | `/v1/analyses` | P0 | Run the full analysis; persistence is planned |
 | GET | `/v1/analyses/{id}` | P0 | Retrieve an analysis |
 | GET | `/v1/analyses` | P0 | User history |
 | POST | `/v1/predict/success` | P0 | Calibrated score |

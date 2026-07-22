@@ -1,5 +1,7 @@
 # Definition of Done - MVP
 
+> **Status as of 20 July 2026:** The calibrated model, validation battery, local FastAPI inference endpoints, and HTML live-model integration are implemented. The unchecked items below remain the authoritative closure checklist; the MVP is not complete until persistence, profit, Power BI export, production deployment, security, and reproducible artifacts are delivered. See [18_BACKEND_RUNBOOK.md](18_BACKEND_RUNBOOK.md) for the current local workflow.
+
 ## Data
 
 - [ ] Datasets A, B, and C built and versioned.

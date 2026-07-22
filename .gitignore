@@ -11,6 +11,10 @@ __pycache__/
 node_modules/
 .next/
 dist/
+.pnpm-store/
+*.tsbuildinfo
+playwright-report/
+test-results/
 
 # Raw and processed datasets
 data/raw/*

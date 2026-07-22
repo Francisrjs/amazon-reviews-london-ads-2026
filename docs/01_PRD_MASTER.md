@@ -1,5 +1,7 @@
 # Master PRD - Launchly
 
+> **Implementation status — 20 July 2026:** The data-science pipeline, calibrated model, validation battery, and local FastAPI inference service are implemented. The MVP is not complete: persistence, profit calculations, Power BI export, production deployment, security controls, and reproducible model artifacts remain outstanding. See [Backend Runbook](18_BACKEND_RUNBOOK.md) for local execution.
+
 ## 1. Executive summary
 
 Launchly is a web application that helps small entrepreneurs evaluate a Beauty and Personal Care product idea before investing. The solution combines historical Amazon data, machine learning, comparable-product analysis, and financial rules to produce a readable recommendation.
@@ -62,6 +64,20 @@ Build a functional MVP that receives a product proposal and returns:
 - Basic local explanation.
 - Persistence in Supabase.
 - Results dataset consumable from Power BI.
+
+### Delivered in the current repository revision
+
+- Calibrated Random Forest success model with documented holdout, calibration, leakage, permutation, stability, and per-subcategory validation.
+- Local FastAPI service for success prediction, comparables, saturation, price-score scenarios, and combined analysis.
+- HTML dashboard integration with a live-model badge and an explicitly labeled demo fallback.
+
+### Still required to close the MVP
+
+- Implement profit per sale and expected profit using the documented cost inputs.
+- Persist analyses and expose analysis retrieval/history through Supabase.
+- Produce a versioned Power BI dataset.
+- Publish or reproducibly regenerate the model and catalog artifacts from a clean checkout.
+- Add production authentication, RLS, HTTPS, request IDs, rate limiting, logs, and deployment.
 
 ### Added later - P1
 
@@ -150,13 +166,17 @@ flowchart LR
 
 ## 13. Current state
 
-- Partially completed: sampling, column analysis, price cleaning, review counting and filtering, master dataset exports.
-- Visual prototype available: full HTML with all screens.
-- Pending: split datasets by use case, build an unbiased target, train a baseline, replace HTML simulations, and deploy the API.
+- Data foundation: documented and partially implemented; the pipeline and dataset assumptions still need a reproducible clean-checkout build.
+- Machine learning: implemented and validated as a modest but real signal. The reported holdout ROC-AUC is approximately 0.707 and the calibrated ECE is approximately 0.007; these values are not a guarantee of sales.
+- Backend: local FastAPI inference service implemented. It requires generated artifacts under `output/models/` and `output/predictions/` before startup.
+- Frontend: `AmazonProject.html` calls `/v1/analyses` when the API is available and falls back to labeled demo data when it is not.
+- Product MVP: incomplete. Profit, persistence, Power BI export, production deployment, and production security are still pending.
 
 ## 14. Main technical decision
 
 Supabase is used for Auth, application data, and results. Large datasets are stored as Parquet in object storage. The model is served from a Python API, because Supabase does not replace the machine-learning runtime.
+
+For the current local backend workflow, use [18_BACKEND_RUNBOOK.md](18_BACKEND_RUNBOOK.md).
 
 ## 15. Documentation policy
 

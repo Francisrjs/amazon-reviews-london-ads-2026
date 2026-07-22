@@ -17,8 +17,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-# artefactos en REPO/output/models  (../../output desde src/api)
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parent
 MODELS = ROOT / "output" / "models"
 PRED = ROOT / "output" / "predictions"
 METRICS = ROOT / "output" / "metrics"

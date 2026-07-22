@@ -1,0 +1,22 @@
+{
+  "name": "launchly",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "frontend:dev": "pnpm --dir src/frontend dev",
+    "frontend:build": "pnpm --dir src/frontend build",
+    "frontend:test": "pnpm --dir src/frontend test",
+    "supabase": "supabase",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "db:lint": "supabase db lint",
+    "db:test": "supabase test db"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.21",
+    "supabase": "2.109.1",
+    "tailwindcss": "^4.3.3"
+  }
+}

@@ -17,6 +17,11 @@
 13. [Risks, ethics, and limitations](13_RISKS_ETHICS.md)
 14. [Definition of Done](14_DEFINITION_OF_DONE.md)
 15. [References](15_REFERENCES.md)
+16. [Backend runbook](18_BACKEND_RUNBOOK.md)
+17. [Backend implementation documentation](backend/README.md)
+18. [Next.js frontend architecture](19_NEXTJS_FRONTEND.md)
+19. [Supabase Auth and database design](20_SUPABASE_AUTH_DATABASE.md)
+20. [Vercel Next.js and FastAPI deployment plan](plans/VERCEL_NEXTJS_FASTAPI_DEPLOYMENT_PLAN.md)
 
 ## How to read this repository
 
