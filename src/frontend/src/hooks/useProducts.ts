@@ -7,7 +7,6 @@ export function useProducts(limit = 10) {
     useEffect(() => {
         async function fetchProducts() {
             try {
-                // Apunta a la API route de Next.js en lugar de 127.0.0.1
                 const response = await fetch(`/api/datasets/products?skip=0&limit=${limit}`);
                 const data = await response.json();
                 
