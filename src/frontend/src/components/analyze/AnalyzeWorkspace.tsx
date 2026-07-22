@@ -90,7 +90,7 @@ export function AnalyzeWorkspace() {
             disabled={busy || loadingProducts || products.length === 0}
             className="px-5 py-2.5 bg-violet-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {loadingProducts ? "Connecting to local database..." : "Autocomplete product..."}
+            {loadingProducts ? "Fetching products..." : "Autocomplete product..."}
           </button>
         )}
       </div>
