@@ -52,8 +52,12 @@ export function ProductAutocomplete({ value, onChange }: { value: string; onChan
                             <li
                                 key={product.id ?? index}
                                 onClick={() => {
-                                    setQuery(displayName);
-                                    onChange(displayName);
+                                    const trimmedName = displayName.length > 120 
+                                        ? displayName.substring(0, 117) + "..." 
+                                        : displayName;
+                                    
+                                    setQuery(trimmedName);
+                                    onChange(trimmedName);
                                     setIsOpen(false);
                                 }}
                                 title={displayName}

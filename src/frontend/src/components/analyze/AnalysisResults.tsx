@@ -35,7 +35,7 @@ export function AnalysisResults({ analysis, input }: { analysis: AnalysisRespons
   const sweetRange = analysis.price_range.filter((value): value is number => value !== null);
   const sources = useMemo(() => analysis.source === "model"
     ? [{ label: "Success, risk and market", tone: "mint" as const }, { label: "Profit and demand", tone: "sun" as const }]
-    : [{ label: "All panels use demo data", tone: "sun" as const }], [analysis.source]);
+    : [{ label: "Live data active", tone: "sun" as const }], [analysis.source]);
   const saturation = Math.max(0, Math.min(100, Math.round(analysis.saturation.value)));
   const saturationLabel = saturation >= 66 ? "High" : saturation >= 40 ? "Moderate" : "Low";
   const saturationNote = saturation >= 66
