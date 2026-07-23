@@ -10,6 +10,8 @@ backend. The master product truth remains [`../01_PRD_MASTER.md`](../01_PRD_MAST
 3. [`03_API_CONTRACTS.md`](03_API_CONTRACTS.md) — authenticated HTTP contracts.
 4. [`04_SUPABASE_RUNBOOK.md`](04_SUPABASE_RUNBOOK.md) — local and remote migration workflow.
 5. [`05_TESTING_OPERATIONS.md`](05_TESTING_OPERATIONS.md) — validation and failure handling.
+6. [`06_DISCOVER_CARD_DATA_REQUIREMENTS.md`](06_DISCOVER_CARD_DATA_REQUIREMENTS.md) — source-of-truth rules for Discover cards.
+7. [`07_DISCOVER_NO_MODEL_MIGRATION.md`](07_DISCOVER_NO_MODEL_MIGRATION.md) — staged Discover migration while the model artifact is unavailable.
 
 ## Implemented boundary
 

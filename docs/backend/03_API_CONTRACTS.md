@@ -3,6 +3,37 @@
 All `/v1` data endpoints require `Authorization: Bearer <supabase-access-token>`.
 `GET /health` and `GET /v1/models/current` remain public.
 
+## Discover catalog
+
+| Method | Path | Behavior |
+|---|---|---|
+| GET | `/v1/datasets/products?skip=0&limit=12&category=Skin%20Care` | Returns a paginated catalog page, optionally filtered by one exact leaf category. |
+| GET | `/v1/datasets/product-categories` | Returns alphabetically sorted leaf categories, excluding `Beauty & Personal Care`. |
+
+`GET /v1/datasets/products` returns `{items, skip, limit, total}`. `category` is
+an exact, parameterized category match; products are returned once even where
+their category path has multiple entries. Each item may include the active
+precomputed metric version:
+
+```json
+{
+  "success_score": 78.42,
+  "decision_risk": 31,
+  "risk_downside": 21.58,
+  "risk_saturation": 48.2,
+  "risk_uncertainty": 17.1,
+  "model_version": "success-rf-0.1.0",
+  "dataset_version": "beauty-master-2026-07",
+  "computed_at": "2026-07-22T12:00:00Z"
+}
+```
+
+The fields are absent or `null` when the matching batch has not been loaded or
+the model artifact is unavailable. They are never synthesized by the API or
+browser. In that state, a separately documented historical binary label may be
+returned for audit/display purposes, but it is not a replacement for either
+model metric.
+
 ## Analysis
 
 `POST /v1/analyses` accepts:
